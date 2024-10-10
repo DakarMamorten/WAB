@@ -1,7 +1,10 @@
 package com.project.wab.domain;
 
 import jakarta.persistence.*;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import java.math.BigDecimal;
 import java.util.List;
@@ -14,16 +17,15 @@ import java.util.List;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@RequiredArgsConstructor
-public class Product {
+public class Order {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private String name;
-    private String description;
+    @ManyToOne
+    @JoinColumn(name = "user_id")
+    private User user;
     private BigDecimal price;
     private String brand;
-    @OneToMany(mappedBy = "product")
-    private List<OrderItem> orders;
-
+    @OneToMany(mappedBy = "order")
+    private List<OrderItem> items;
 }
