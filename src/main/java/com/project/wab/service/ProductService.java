@@ -28,6 +28,7 @@ public class ProductService {
                 .orElseThrow(() -> new RuntimeException("Product not found"));
     }
 
+
     public Product saveProduct(Product product) {
         return productRepository.save(product);
     }

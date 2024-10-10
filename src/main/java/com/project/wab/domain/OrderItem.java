@@ -6,6 +6,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.math.BigDecimal;
+
 /**
  * @author "Vladyslav Paun"
  */
@@ -28,5 +30,5 @@ class OrderItem {
     private Product product;
 
     private int quantity;
-    private double price;
+    private BigDecimal price;
 }
