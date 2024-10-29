@@ -24,6 +24,6 @@ public class ProductController {
     public String viewProducts(Model model) {
         List<Product> products = productService.getAllProducts();
         model.addAttribute("products", products);
-        return "index"; // Возвращает шаблон index.html (либо products, если шаблон называется products.html)
+        return "list_product"; // Возвращает шаблон list_product.html (либо products, если шаблон называется products.html)
     }
 }

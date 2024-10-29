@@ -22,6 +22,6 @@ public class HomeController {
     public String index(Model model) {
         List<Product> products = productService.getAllProducts();
         model.addAttribute("products", products);
-        return "index";
+        return "list_product";
     }
 }

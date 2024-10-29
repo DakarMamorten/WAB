@@ -7,7 +7,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
 /**
@@ -20,7 +19,7 @@ public class OrderService {
     public List<Order> findAll() {
         Iterable<Order> orders = orderRepository.findAll();
         return StreamSupport.stream(orders.spliterator(), false)
-                .collect(Collectors.toList());
+                .toList();
     }
     public Order getOrderById(Long id) {
         return orderRepository.findById(id)
