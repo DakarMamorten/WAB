@@ -1,4 +1,4 @@
-CREATE TABLE public.users
+CREATE TABLE users
 (
     id       BIGSERIAL ,
     name     VARCHAR(100) NOT NULL,

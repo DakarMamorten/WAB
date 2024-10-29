@@ -1,4 +1,4 @@
-CREATE TABLE public.products
+CREATE TABLE products
 (
     id          BIGSERIAL,
     name        VARCHAR(255)   NOT NULL,

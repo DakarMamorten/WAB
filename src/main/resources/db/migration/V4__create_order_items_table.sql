@@ -1,4 +1,4 @@
-CREATE TABLE public.order_item
+CREATE TABLE order_item
 (
     id         BIGSERIAL,
     order_id   BIGINT,

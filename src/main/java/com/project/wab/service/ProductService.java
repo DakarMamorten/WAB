@@ -18,9 +18,7 @@ public class ProductService {
     private final ProductRepository productRepository;
 
     public List<Product> getAllProducts() {
-        Iterable<Product> products = productRepository.findAll();
-        return StreamSupport.stream(products.spliterator(), false)
-                .collect(Collectors.toList());
+        return productRepository.findAll();
     }
 
     public Product getProductById(Long id) {

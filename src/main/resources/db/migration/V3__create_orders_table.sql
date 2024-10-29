@@ -1,4 +1,4 @@
-CREATE TABLE public.orders (
+CREATE TABLE orders (
                         id BIGSERIAL,
                         user_id BIGINT NOT NULL,
                         price DECIMAL(10, 2) NOT NULL,

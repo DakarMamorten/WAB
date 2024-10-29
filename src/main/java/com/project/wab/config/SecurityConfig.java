@@ -25,12 +25,12 @@ public class SecurityConfig extends WebSecurityConfiguration {
         http
                 .csrf(csrf -> csrf.disable()) // Отключение CSRF (для тестов)
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/api/users").hasRole("ADMIN")
-                        .requestMatchers("/api/products").permitAll()
-                        .requestMatchers("/api/orders").authenticated()
+                        .requestMatchers("/users").hasRole("ADMIN")
+                        .requestMatchers("/products").permitAll()
+                        .requestMatchers("/orders").authenticated()
                         .anyRequest().authenticated()
                 )
-                .httpBasic(withDefaults()); // Правильная конфигурация httpBasic
+                .httpBasic(withDefaults());
         return http.build();
     }
 
@@ -50,4 +50,5 @@ public class SecurityConfig extends WebSecurityConfiguration {
 
         return new InMemoryUserDetailsManager(admin, user);
     }
+
 }
