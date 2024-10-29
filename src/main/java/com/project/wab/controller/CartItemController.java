@@ -8,6 +8,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 /**
  * @author "Vladyslav Paun"
  */
@@ -16,17 +18,20 @@ import org.springframework.web.bind.annotation.*;
 @RequiredArgsConstructor
 public class CartItemController {
     private final ProductService productService;
+    private final CartItemService cartItemService;
+
 
     @GetMapping("/add")
-    public String addProductForm(Model model) {
-        model.addAttribute("product", new Product());
-        return "add_product";
+    public String showAddToCartForm(Model model) {
+        List<Product> products = productService.getAllProducts();
+        model.addAttribute("products", products);
+        return "add_to_cart";
     }
 
     @PostMapping("/add")
-    public String addProduct(@ModelAttribute Product product) {
-        productService.saveProduct(product);
-        return "redirect:/list_products";
+    public String addToCart(@RequestParam("productId") Long productId, Integer quantity) {
+        cartItemService.addProductToCart(productId, quantity);
+        return "redirect:/cart";
     }
 
 }
