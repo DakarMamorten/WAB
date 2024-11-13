@@ -22,7 +22,7 @@ public class CartItemService {
         return cartItemRepository.findAll();
     }
 
-    public CartItem addProductToCart(Long productId,Integer quantity) {
+    public CartItem addProductToCart(Long productId, Long id, Integer quantity) {
         Product product = productRepository.findById(productId).orElseThrow();
         CartItem cartItem = new CartItem();
         cartItem.setProduct(product);
@@ -34,9 +34,10 @@ public class CartItemService {
         cartItemRepository.deleteById(cartItemId);
     }
 
-    public void updateCartItemQuantity(Long cartItemId, int quantity) {
+    public CartItem updateCartItemQuantity(Long cartItemId, int quantity) {
         CartItem cartItem = cartItemRepository.findById(cartItemId).orElseThrow();
         cartItem.setQuantity(quantity);
         cartItemRepository.save(cartItem);
+        return cartItem;
     }
 }

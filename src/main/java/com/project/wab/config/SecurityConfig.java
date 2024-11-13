@@ -23,7 +23,7 @@ public class SecurityConfig extends WebSecurityConfiguration {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
-                .csrf(csrf -> csrf.disable()) // Отключение CSRF (для тестов)
+                .csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/users").hasRole("ADMIN")
                         .requestMatchers("/products").permitAll()
@@ -41,6 +41,7 @@ public class SecurityConfig extends WebSecurityConfiguration {
                 .password("admin123")
                 .roles("ADMIN")
                 .build();
+
 
         UserDetails user = User.withDefaultPasswordEncoder()
                 .username("user")
