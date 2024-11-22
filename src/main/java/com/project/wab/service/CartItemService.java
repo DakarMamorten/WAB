@@ -40,4 +40,7 @@ public class CartItemService {
         cartItemRepository.save(cartItem);
         return cartItem;
     }
+    public List<CartItem> getCartItemsByCartId(Long cartId) {
+        return cartItemRepository.findByCartId(cartId);
+    }
 }

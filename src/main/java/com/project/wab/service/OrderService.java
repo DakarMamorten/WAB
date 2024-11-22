@@ -60,8 +60,6 @@ public class OrderService {
         order.setPrice(totalAmount);
         orderRepository.save(order);
 
-        cartService.clearCart(user);
-
         return order;
     }
 }

@@ -1,11 +1,14 @@
 package com.project.wab.controller;
 
-import com.project.wab.domain.Product;
+import com.project.wab.domain.CartItem;
+import com.project.wab.domain.User;
 import com.project.wab.service.CartItemService;
+import com.project.wab.service.CartService;
 import com.project.wab.service.ProductService;
+import com.project.wab.service.UserService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -17,21 +20,29 @@ import java.util.List;
 @RequestMapping("/cart")
 @RequiredArgsConstructor
 public class CartItemController {
-    private final ProductService productService;
+    private final UserService userService;
+    private final CartService cartService;
     private final CartItemService cartItemService;
 
 
-    @GetMapping("/add")
-    public String showAddToCartForm(Model model) {
-        List<Product> products = productService.getAllProducts();
-        model.addAttribute("products", products);
-        return "add_to_cart";
+
+    @GetMapping("/{cartId}")
+    public ResponseEntity<List<CartItem>> getCartItems(@PathVariable Long cartId) {
+        List<CartItem> cartItems = cartItemService.getCartItemsByCartId(cartId);
+        return ResponseEntity.ok(cartItems);
     }
 
-    @PostMapping("/add")
-    public String addToCart(@RequestParam("productId") Long productId, Integer quantity) {
-        cartItemService.addProductToCart(productId, quantity);
-        return "redirect:/cart";
+    @PutMapping("/{cartItemId}")
+    public ResponseEntity<CartItem> updateCartItem(@PathVariable Long cartItemId, @RequestParam int quantity) {
+        CartItem updatedItem = cartItemService.updateCartItemQuantity(cartItemId, quantity);
+        return ResponseEntity.ok(updatedItem);
+    }
+
+    @GetMapping("/{userId}/items")
+    public ResponseEntity<List<CartItem>> getCartItemsByUserId(@PathVariable Long userId) {
+        User user = userService.findById(userId); // Метод для поиска пользователя
+        List<CartItem> cartItems = cartService.getCartItems(user);
+        return ResponseEntity.ok(cartItems);
     }
 
 }
