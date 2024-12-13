@@ -3,6 +3,8 @@ package com.project.wab.domain;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.util.List;
+
 /**
  * @author "Vladyslav Paun"
  */
@@ -20,4 +22,6 @@ public class User {
     private String email;
     private String password;
     private String role;
+    @OneToMany(mappedBy = "user")
+    private List<CartItem> cartItems;
 }

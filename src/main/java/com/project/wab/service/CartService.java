@@ -27,8 +27,12 @@ public class CartService {
 
     public Cart addProductToCart(Long userId, Long productId, int quantity) {
         Cart cart = getCartByUserId(userId);
-        cartItemService.addProductToCart(userId, productId, quantity);
-        return cart;
+
+        CartItem cartItem = cartItemService.addProductToCart(productId, quantity);
+
+        cart.getItems().add(cartItem);
+
+        return cartRepository.save(cart);
     }
 
     public void checkout(Long userId) {

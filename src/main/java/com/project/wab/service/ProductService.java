@@ -4,10 +4,7 @@ import com.project.wab.domain.Product;
 import com.project.wab.repository.ProductRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-
 import java.util.List;
-import java.util.stream.Collectors;
-import java.util.stream.StreamSupport;
 
 /**
  * @author "Vladyslav Paun"
@@ -25,7 +22,6 @@ public class ProductService {
         return productRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Product not found"));
     }
-
 
     public Product saveProduct(Product product) {
         return productRepository.save(product);

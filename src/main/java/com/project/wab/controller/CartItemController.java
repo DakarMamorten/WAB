@@ -17,14 +17,12 @@ import java.util.List;
  * @author "Vladyslav Paun"
  */
 @Controller
-@RequestMapping("/cart")
+@RequestMapping("/cart/items")
 @RequiredArgsConstructor
 public class CartItemController {
     private final UserService userService;
     private final CartService cartService;
     private final CartItemService cartItemService;
-
-
 
     @GetMapping("/{cartId}")
     public ResponseEntity<List<CartItem>> getCartItems(@PathVariable Long cartId) {
@@ -40,7 +38,7 @@ public class CartItemController {
 
     @GetMapping("/{userId}/items")
     public ResponseEntity<List<CartItem>> getCartItemsByUserId(@PathVariable Long userId) {
-        User user = userService.findById(userId); // Метод для поиска пользователя
+        User user = userService.findById(userId);
         List<CartItem> cartItems = cartService.getCartItems(user);
         return ResponseEntity.ok(cartItems);
     }

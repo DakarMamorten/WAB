@@ -2,6 +2,7 @@ package com.project.wab.controller;
 
 import com.project.wab.domain.Order;
 import com.project.wab.service.OrderService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
@@ -13,8 +14,9 @@ import java.util.List;
 
 @Controller
 @RequestMapping("/order")
+@RequiredArgsConstructor
 public class OrderController {
-    private OrderService orderService;
+    private final OrderService orderService;
     @GetMapping
     public List<Order> getAllOrders() {
         return orderService.findAll();

@@ -22,11 +22,14 @@ public class CartItemService {
         return cartItemRepository.findAll();
     }
 
-    public CartItem addProductToCart(Long productId, Long id, Integer quantity) {
-        Product product = productRepository.findById(productId).orElseThrow();
+    public CartItem addProductToCart(Long productId, int quantity) {
+        Product product = productRepository.findById(productId)
+                .orElseThrow(() -> new RuntimeException("Product not found"));
+
         CartItem cartItem = new CartItem();
         cartItem.setProduct(product);
         cartItem.setQuantity(quantity);
+
         return cartItemRepository.save(cartItem);
     }
 
