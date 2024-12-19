@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Product List</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</head>
+<body>
+<div th:insert="~{/navbar :: content}"></div>
+<div class="container my-4">
+    <h1>Product Management</h1>
+    <button type="button" class="btn btn-primary mb-3" data-bs-toggle="modal" data-bs-target="#addProductModal">
+        Add Product
+    </button>
+    <table class="table table-striped table-bordered">
+        <thead>
+        <tr>
+            <th>ID</th>
+            <th>Name</th>
+            <th>Description</th>
+            <th>Price</th>
+            <th>Brand</th>
+            <th>Actions</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="product : ${products}">
+            <td th:text="${product.id}"></td>
+            <td th:text="${product.name}"></td>
+            <td th:text="${product.description}"></td>
+            <td th:text="${product.price} + ' PLN'"></td>
+            <td th:text="${product.brand}"></td>
+            <td>
+                <button type="button" class="btn btn-sm btn-primary" data-bs-toggle="modal"
+                        th:attr="data-bs-target=${'#editProductModal' + product.id}">
+                    Edit
+                </button>
+                <button type="button" class="btn btn-sm btn-danger" data-bs-toggle="modal"
+                        th:attr="data-bs-target=${'#deleteProductModal' + product.id}">
+                    Delete
+                </button>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+
+<!-- Add Product Modal -->
+<div class="modal fade" id="addProductModal" tabindex="-1" aria-labelledby="addProductModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="addProductModalLabel">Add Product</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <form th:action="@{/product/add}" method="post">
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label for="productName" class="form-label">Name</label>
+                        <input type="text" class="form-control" id="productName" name="name" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="productDescription" class="form-label">Description</label>
+                        <textarea class="form-control" id="productDescription" name="description" rows="3"></textarea>
+                    </div>
+                    <div class="mb-3">
+                        <label for="productPrice" class="form-label">Price</label>
+                        <input type="number" class="form-control" id="productPrice" name="price" step="0.01" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="productBrand" class="form-label">Brand</label>
+                        <input type="text" class="form-control" id="productBrand" name="brand" required>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-primary">Save</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- Edit Product Modal -->
+<div class="modal fade" th:each="product : ${products}" th:attr="id=${'editProductModal' + product.id}" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <form th:action="@{/product/edit}" method="post">
+                <div class="modal-body">
+                    <input type="hidden" name="id" th:value="${product.id}">
+                    <div class="mb-3">
+                        <label for="editProductName" class="form-label">Name</label>
+                        <input type="text" class="form-control" id="editProductName" name="name" th:value="${product.name}" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="editProductDescription" class="form-label" th:text="'Input description : '"></label>
+                        <input type="text" class="form-control" id="editProductDescription" name="description"
+                               th:value="${product.description}">
+                    </div>
+                    <div class="mb-3">
+                        <label for="priceId" class="form-label" th:text="'Input price : '"></label>
+                        <input type="text" class="form-control" id="priceId" name="price"
+                               th:value="${product.price}">
+                    </div>
+                    <div class="mb-3">
+                        <label for="brandId" class="form-label" th:text="'Input brand : '"></label>
+                        <input type="text" class="form-control" id="brandId" name="brand"
+                               th:value="${product.brand}">
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-primary">Save</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- Delete Product Modal -->
+<div class="modal fade" th:each="product : ${products}" th:attr="id=${'deleteProductModal' + product.id}" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-body">
+                <p>Are you sure you want to delete product <span th:text="${product.name}"></span>?</p>
+            </div>
+            <div class="modal-footer">
+                <form th:action="@{/product/delete}" method="post">
+                    <input type="hidden" name="id" th:value="${product.id}">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <button type="submit" class="btn btn-danger">Delete</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>

@@ -25,4 +25,24 @@ public class ReviewService {
     public Review addReview(Review review) {
         return reviewRepository.save(review);
     }
+
+    public Review getReviewById(Long reviewId) {
+        return reviewRepository.findById(reviewId)
+                .orElseThrow(() -> new RuntimeException("Review not found"));
+    }
+
+    public Review updateReview(Long reviewId, String comment, int rating) {
+        Review review = getReviewById(reviewId);
+        review.setComment(comment);
+        review.setRating(rating);
+        return reviewRepository.save(review);
+    }
+
+    public void deleteReview(Long reviewId) {
+        reviewRepository.deleteById(reviewId);
+    }
+
+    public List<Review> getAllReviews() {
+        return reviewRepository.findAll();
+    }
 }

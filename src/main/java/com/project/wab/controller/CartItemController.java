@@ -36,11 +36,4 @@ public class CartItemController {
         return ResponseEntity.ok(updatedItem);
     }
 
-    @GetMapping("/{userId}/items")
-    public ResponseEntity<List<CartItem>> getCartItemsByUserId(@PathVariable Long userId) {
-        User user = userService.findById(userId);
-        List<CartItem> cartItems = cartService.getCartItems(user);
-        return ResponseEntity.ok(cartItems);
-    }
-
 }
