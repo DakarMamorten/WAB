@@ -20,12 +20,12 @@ import java.time.LocalDateTime;
 public class ReviewAddController {
     private final ReviewService reviewService;
 
-    @PostMapping("/add")
-    public String add(final Long productId, final Long userId, final String comment, final int rating) {
-        Review review = new Review(null, new Product(productId, null, null, null, null, null), new User(userId, null, null, null, null, null), comment, rating, LocalDateTime.now());
-        reviewService.addReview(review);
-        return "redirect:/review/list?productId=" + productId;
-    }
+//    @PostMapping("/add")
+//    public String add(final Long productId, final Long userId, final String comment, final int rating) {
+//        Review review = new Review(null, new Product(productId, null, null, null, null, null), new User(userId, null, null, null, null, null), comment, rating, LocalDateTime.now());
+//        reviewService.addReview(review);
+//        return "redirect:/review/list?productId=" + productId;
+//    }
 }
 
 

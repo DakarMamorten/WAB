@@ -23,8 +23,15 @@ public class Cart {
     @JoinColumn(name = "user_id", referencedColumnName = "id")
     private User user;
 
+    @Column(unique = true, nullable = false)
+    private String token;
+
     @OneToMany(mappedBy = "cart", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<CartItem> items = new ArrayList<>();
+
+    public Cart(String token) {
+        this.token = token;
+    }
 
     public void addItem(CartItem item) {
         items.add(item);

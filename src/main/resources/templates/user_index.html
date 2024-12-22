@@ -5,7 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>User Index</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.10.5/font/bootstrap-icons.min.css">
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.10.5/font/bootstrap-icons.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 
@@ -21,12 +22,39 @@
                 <div class="card-body">
                     <h5 class="card-title" th:text="${product.name}"></h5>
                     <p class="card-text" th:text="${product.description}"></p>
-                    <a href="#" class="btn btn-primary">Do koszyka</a>
+                    <a href="#" class="btn btn-primary"
+                       th:attr="data-product=${product.name}"
+                       onclick="addToCart(event)">Do koszyka</a>
                 </div>
             </div>
         </div>
     </div>
 </div>
+<script>
+    function addToCart(event) {
+        event.preventDefault();
+        const productName = event.target.getAttribute("data-product");
 
+        fetch('/cart/add', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                productName: productName,
+                quantity: 1
+            })
+        })
+            .then(response => {
+                if (response.ok) {
+                    console.log('Item added to cart!');
+                    //redirect!!!
+                } else {
+                    console.log('Failed to add item to cart.');
+                }
+            });
+    }
+
+</script>
 </body>
 </html>

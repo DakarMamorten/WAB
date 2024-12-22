@@ -27,7 +27,7 @@ public class CartItemService {
                 .orElseThrow(() -> new RuntimeException("Product not found"));
 
         CartItem cartItem = new CartItem();
-        cartItem.setProduct(product);
+        cartItem.setProductName(product.getName());
         cartItem.setQuantity(quantity);
 
         return cartItemRepository.save(cartItem);

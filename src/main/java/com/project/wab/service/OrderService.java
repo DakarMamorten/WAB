@@ -36,30 +36,30 @@ public class OrderService {
         orderRepository.deleteById(id);
     }
 
-    @Transactional
-    public Order createOrder(User user) {
-        List<CartItem> cartItems = cartService.getCartItems(user);
-
-        Order order = new Order();
-        order.setUser(user);
-        order.setOrderStatus(OrderStatus.CREATED);
-
-        BigDecimal totalAmount = BigDecimal.ZERO;
-
-        for (CartItem cartItem : cartItems) {
-            OrderItem orderItem = new OrderItem();
-            orderItem.setOrder(order);
-            orderItem.setProduct(cartItem.getProduct());
-            orderItem.setQuantity(cartItem.getQuantity());
-            orderItem.setPrice(cartItem.getProduct().getPrice());
-
-            totalAmount = totalAmount.add(orderItem.getPrice().multiply(BigDecimal.valueOf(orderItem.getQuantity())));
-            order.getItems().add(orderItem);
-        }
-
-        order.setPrice(totalAmount);
-        orderRepository.save(order);
-
-        return order;
-    }
+//    @Transactional
+//    public Order createOrder(User user) {
+//        List<CartItem> cartItems = cartService.getCartItems(user);
+//
+//        Order order = new Order();
+//        order.setUser(user);
+//        order.setOrderStatus(OrderStatus.CREATED);
+//
+//        BigDecimal totalAmount = BigDecimal.ZERO;
+//
+//        for (CartItem cartItem : cartItems) {
+//            OrderItem orderItem = new OrderItem();
+//            orderItem.setOrder(order);
+//            orderItem.setProduct(cartItem.getProduct());
+//            orderItem.setQuantity(cartItem.getQuantity());
+//            orderItem.setPrice(cartItem.getProduct().getPrice());
+//
+//            totalAmount = totalAmount.add(orderItem.getPrice().multiply(BigDecimal.valueOf(orderItem.getQuantity())));
+//            order.getItems().add(orderItem);
+//        }
+//
+//        order.setPrice(totalAmount);
+//        orderRepository.save(order);
+//
+//        return order;
+//    }
 }

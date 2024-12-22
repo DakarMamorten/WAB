@@ -24,6 +24,6 @@ public class User {
     private String email;
     private String password;
     private String role;
-    @OneToMany(mappedBy = "user")
-    private List<CartItem> cartItems;
+//    @OneToMany(mappedBy = "user")
+//    private List<CartItem> cartItems;
 }

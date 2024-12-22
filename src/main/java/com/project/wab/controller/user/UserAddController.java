@@ -18,10 +18,10 @@ import java.util.ArrayList;
 public class UserAddController {
     private final UserService userService;
 
-    @PostMapping("/add")
-    public String add(final String name, final String email, final String password, final String role) {
-        User user = new User(null, name, email, password, role, new ArrayList<>());
-        userService.saveUser(user);
-        return "redirect:/user/list";
-    }
+//    @PostMapping("/add")
+//    public String add(final String name, final String email, final String password, final String role) {
+//        User user = new User(null, name, email, password, role, new ArrayList<>());
+//        userService.saveUser(user);
+//        return "redirect:/user/list";
+//    }
 }
