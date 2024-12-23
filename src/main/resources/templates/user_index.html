@@ -47,8 +47,7 @@
         })
             .then(response => {
                 if (response.ok) {
-                    console.log('Item added to cart!');
-                    //redirect!!!
+                    window.location.href = '/index/user';
                 } else {
                     console.log('Failed to add item to cart.');
                 }
