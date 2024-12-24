@@ -5,6 +5,8 @@ import jakarta.persistence.*;
 import lombok.*;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.GrantedAuthority;
+
+import java.time.LocalDateTime;
 import java.util.Collection;
 import java.util.List;
 import java.util.Objects;
@@ -27,6 +29,13 @@ public class User implements UserDetails {
     private String password;
     @Column(unique = true, nullable = false, updatable = false)
     private String email;
+    private LocalDateTime lockTime;
+    @Column(nullable = false)
+    private boolean enabled;
+    @Column(nullable = false)
+    private boolean accountNonLocked;
+    private int failedAttempt;
+
     @ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
     @JoinColumn(name = "role_id")
     private Role role;

@@ -55,28 +55,9 @@ public class CartService {
 
     public Cart getCartByToken(String token) {
         return cartRepository.findByToken(token)
-                .orElseGet(() -> {
-                    Cart newCart = new Cart();
-                    newCart.setToken(token);
-                    return cartRepository.save(newCart);
-                });
+                .orElseThrow();
     }
 
-//    public Cart addProductToCart(Long userId, Long productId, int quantity) {
-//        Cart cart = getCartByUserId(userId);
-//
-//        CartItem cartItem = cartItemService.addProductToCart(productId, quantity);
-//
-//        cart.getItems().add(cartItem);
-//
-//        return cartRepository.save(cart);
-//    }
-
-//    public void checkout(Long userId) {
-//        Cart cart = getCartByUserId(userId);
-//        cart.getItems().clear();
-//        cartRepository.save(cart);
-//    }
 
     private Cart createNewCartForUser(Long userId) {
         Cart cart = new Cart();
@@ -84,8 +65,4 @@ public class CartService {
         return cartRepository.save(cart);
     }
 
-//    public List<CartItem> getCartItems(User user) {
-//        Cart cart = cartRepository.findByUser(user).orElseThrow(() -> new RuntimeException("Cart not found for user"));
-//        return cartItemService.getCartItemsByCartId(cart.getId());
-//    }
 }

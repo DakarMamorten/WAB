@@ -16,3 +16,6 @@ spring:
 image:
   upload:
     dir: ""
+lock:
+  time:
+    duration: 5 #Time in minutes

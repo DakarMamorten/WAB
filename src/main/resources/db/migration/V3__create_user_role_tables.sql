@@ -6,10 +6,14 @@ CREATE TABLE IF NOT EXISTS role
 
 CREATE TABLE IF NOT EXISTS users
 (
-    id        BIGSERIAL PRIMARY KEY,
-    user_name VARCHAR(100) NOT NULL,
-    email     VARCHAR(50)  NOT NULL UNIQUE,
-    password  VARCHAR(256) NOT NULL,
+    id                  BIGSERIAL PRIMARY KEY,
+    user_name           VARCHAR(100) NOT NULL,
+    email               VARCHAR(50)  NOT NULL UNIQUE,
+    password            VARCHAR(256) NOT NULL,
+    lock_time           TIMESTAMP,
+    enabled             BOOLEAN DEFAULT true,
+    account_non_locked  BOOLEAN DEFAULT true,
+    failed_attempt      INTEGER DEFAULT 0,
     role_id   BIGINT,
     cart_id   BIGINT,
     FOREIGN KEY (role_id) references role (id),

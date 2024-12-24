@@ -1,30 +1,44 @@
 <!DOCTYPE html>
 <html lang="en">
 <th:block th:fragment="content">
-
-    <link rel="stylesheet" th:href="styles.css">
-
     <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
-        <a class="navbar-brand" th:href="@{/index}">MYUN Store</a>
-        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
-                aria-controls="navbarSupportedContent" aria-expanded="false"
-                aria-label="Toggle navigation">
-            <span class="navbar-toggler-icon"></span>
-        </button>
         <div class="container-fluid">
+            <a class="navbar-brand" th:href="@{/index}">MYUN Store</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
+                    aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
             <div class="collapse navbar-collapse justify-content-between" id="navbarNav">
                 <div class="navbar-nav">
-                    <!-- Другие элементы меню -->
+                    <!-- Other menu items can go here -->
                 </div>
-                <button type="button" class="btn btn-primary position-relative">
-                    <i class="bi bi-cart4" style="font-size:24px" value="5"></i>
-                    <span th:text="${cartSize}" class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
-                        <span class="visually-hidden">unread messages</span>
-                    </span>
-                </button>
+                <div class="navbar-nav">
+                    <button type="button" class="btn btn-primary position-relative me-3">
+                        <i class="bi bi-cart4" style="font-size:24px"></i>
+                        <span th:text="${cartSize}" class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+                            <span class="visually-hidden">unread messages</span>
+                        </span>
+                    </button>
+                    <div class="dropdown">
+                        <span th:if="${#authentication.name == 'anonymousUser'}">
+                            <!-- Show login button when the user is not logged in -->
+                            <a class="btn btn-outline-light" th:href="@{/login}">Login</a>
+                        </span>
+                        <span th:if="${#authentication.name != 'anonymousUser'}">
+                            <!-- Show profile dropdown when the user is logged in -->
+                            <button class="btn btn-outline-light dropdown-toggle" type="button" id="profileMenu"
+                                    data-bs-toggle="dropdown" aria-expanded="false">
+                                Profile
+                            </button>
+                            <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="profileMenu">
+                                <li><a class="dropdown-item" th:href="@{/user/profile}">My Profile</a></li>
+                                <li><a class="dropdown-item" th:href="@{/logout}">Logout</a></li>
+                            </ul>
+                        </span>
+                    </div>
+                </div>
             </div>
         </div>
     </nav>
-
 </th:block>
 </html>
