@@ -1,0 +1,9 @@
+CREATE TABLE IF NOT EXISTS cart
+(
+    id      BIGSERIAL PRIMARY KEY,
+    token   VARCHAR(255) UNIQUE NOT NULL
+);
+
+INSERT INTO cart(token)
+VALUES ('e0cf8529-44dc-4ab6-849b-68a2eb5c31b3'),
+       ('bf8d8e1b-30a8-4577-997a-b4a888368a99')

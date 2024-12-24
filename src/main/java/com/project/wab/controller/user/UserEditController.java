@@ -19,10 +19,10 @@ public class UserEditController {
     @PostMapping("/edit")
     public String edit(final Long id, final String name, final String email, final String password, final String role) {
         User user = userService.getUserById(id);
-        user.setName(name);
+        user.setUsername(name);
         user.setEmail(email);
         user.setPassword(password);
-        user.setRole(role);
+//        user.setRole(role);
         userService.saveUser(user);
         return "redirect:/user/list";
     }

@@ -23,7 +23,7 @@ public class ProductAddController {
 
     @PostMapping("/add")
     public String add(final String name, final String description, final BigDecimal price, final String brand) {
-        Product product = new Product(null, name, description, price, brand, new ArrayList<>());
+        Product product = new Product(null, name, description, price, brand, "");
         productService.saveProduct(product);
         return "redirect:/product/list";
     }

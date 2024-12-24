@@ -5,5 +5,6 @@ CREATE TABLE products
     description TEXT,
     price       DECIMAL(10, 2) NOT NULL,
     brand       VARCHAR(100)   NOT NULL,
+    image_path  VARCHAR(255)   NOT NULL,
     CONSTRAINT products_id_pk PRIMARY KEY (id)
 );
