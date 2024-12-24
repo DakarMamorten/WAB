@@ -2,14 +2,12 @@ package com.project.wab.controller;
 
 import com.project.wab.domain.Cart;
 import com.project.wab.domain.CartItem;
-import com.project.wab.domain.User;
 import com.project.wab.service.CartService;
 import com.project.wab.service.ProductService;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
