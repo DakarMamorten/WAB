@@ -29,7 +29,7 @@ public class Cart {
     private Long userId;
 
     @Column(name = "expire_date")
-    private LocalDateTime expireDate = LocalDateTime.now().plusHours(2);
+    private LocalDateTime expireDate;
 
     @PrePersist
     @PreUpdate

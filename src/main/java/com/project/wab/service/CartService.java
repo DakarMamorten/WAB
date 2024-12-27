@@ -1,17 +1,16 @@
 package com.project.wab.service;
 
 import com.project.wab.domain.Cart;
-import com.project.wab.domain.CartItem;
-import com.project.wab.domain.CartItemId;
 import com.project.wab.domain.Product;
-import com.project.wab.repository.CartItemRepository;
+import com.project.wab.domain.User;
 import com.project.wab.repository.CartRepository;
 import com.project.wab.repository.ProductRepository;
-import com.project.wab.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.util.Optional;
 import java.util.UUID;
 
 /**
@@ -21,52 +20,41 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class CartService {
     private final CartRepository cartRepository;
-    private final UserRepository userRepository;
-    private final CartItemRepository cartItemRepository;
     private final ProductRepository productRepository;
+    private final CartServiceHelper cartServiceHelper;
 
     public Cart findCartByUserID(Long userID) {
-        return cartRepository.findCartByUserID(userID);
+        return cartRepository.findCartByUserID(userID).orElse(null);
     }
 
-    public String createAndPopulateCart(Long productId, String cartId) {
+    public String findCartIdByUserID(Long userId) {
+        final Optional<UUID> cartIdByUserID = cartRepository.findCartIdByUserID(userId);
+        if (cartIdByUserID.isPresent()) {
+            return cartIdByUserID.get().toString();
+        }
+        return "";
+    }
+
+    @Transactional
+    public String createAndPopulateCart(Long productId, String cartId, User currentUser) {
         //todo create ProductNotFoundException
         Product product = productRepository.findById(productId).orElseThrow(IllegalArgumentException::new);
 
         if (cartId != null) {
             final Cart cartFromDb = cartRepository.findById(UUID.fromString(cartId)).orElseThrow();
-            populateCart(product, cartFromDb);
-            cartRepository.save(cartFromDb);
+            cartServiceHelper.populateCart(product, cartFromDb);
             return cartId;
         } else {
             Cart cart = new Cart();
-            cart.setExpireDate(LocalDateTime.now().plusHours(2));
+            if (currentUser == null) {
+                cart.setExpireDate(LocalDateTime.now().plusHours(2));
+            } else {
+                cart.setUserId(currentUser.getId());
+                cart.setExpireDate(null);
+            }
             cartRepository.save(cart);
-            populateCart(product, cart);
-
+            cartServiceHelper.populateCart(product, cart);
             return cart.getId().toString();
         }
-    }
-
-    private void populateCart(Product product, Cart cart) {
-        final CartItem item = cartItemRepository.findCartItemByCartIdAndProductId(cart.getId(), product.getId()).orElseGet(
-                () -> {
-                    CartItem cartItem = new CartItem();
-                    cartItem.setCart(cart);
-                    cartItem.setProduct(product);
-                    cartItem.setQuantity(1);
-
-                    CartItemId cartItemId = new CartItemId(cart.getId(), product.getId());
-                    cartItem.setId(cartItemId);
-
-                    return cartItemRepository.save(cartItem);
-                }
-        );
-        item.setQuantity(item.getQuantity() + 1);
-
-    }
-
-    public String findCartIdByUserID(Long userId) {
-        return cartRepository.findCartIdByUserID(userId).toString();
     }
 }
