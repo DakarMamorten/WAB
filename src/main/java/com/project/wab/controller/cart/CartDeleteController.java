@@ -17,7 +17,7 @@ public class CartDeleteController {
 
     @PostMapping("/delete")
     public String delete(final Long cartItemId) {
-        cartItemService.removeCartItem(cartItemId);
+//        cartItemService.removeCartItem(cartItemId);
         return "redirect:/cart/list";
     }
 }

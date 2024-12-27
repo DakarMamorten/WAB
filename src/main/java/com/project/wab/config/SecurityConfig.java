@@ -41,7 +41,7 @@ public class SecurityConfig {
                 )
                 .formLogin(form -> form
                         .loginPage("/login")
-                        .successHandler(new SavedRequestAwareAuthenticationSuccessHandler()) // Handles saved request redirection
+                        .successHandler(new SavedRequestAwareAuthenticationSuccessHandler())
                         .defaultSuccessUrl("/")
                         .permitAll()
                 )

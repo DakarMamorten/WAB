@@ -1,11 +1,12 @@
-CREATE TABLE cart_item
+CREATE TABLE IF NOT EXISTS cart_item
 (
-    id           BIGSERIAL,
-    product_name VARCHAR(255),
-    quantity     INT NOT NULL,
-    cart_id      BIGINT,
-    CONSTRAINT cart_item_id_pk PRIMARY KEY (id),
-    FOREIGN KEY (cart_id) references cart (id)
+    cart_id    UUID NOT NULL,
+    product_id BIGINT NOT NULL,
+    quantity   INT NOT NULL,
+    PRIMARY KEY (cart_id, product_id),
+    FOREIGN KEY (cart_id) references cart (id),
+    FOREIGN KEY (product_id) references products (id)
 );
 
-CREATE INDEX idx_cart_item_id ON cart_item (cart_id);
+CREATE INDEX idx_cart_item_cart_id ON cart_item (cart_id);
+CREATE INDEX idx_cart_item_product_id ON cart_item (product_id);

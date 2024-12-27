@@ -24,16 +24,16 @@ public class CartItemController {
     private final CartService cartService;
     private final CartItemService cartItemService;
 
-    @GetMapping("/{cartId}")
-    public ResponseEntity<List<CartItem>> getCartItems(@PathVariable Long cartId) {
-        List<CartItem> cartItems = cartItemService.getCartItemsByCartId(cartId);
-        return ResponseEntity.ok(cartItems);
-    }
+//    @GetMapping("/{cartId}")
+//    public ResponseEntity<List<CartItem>> getCartItems(@PathVariable Long cartId) {
+//        List<CartItem> cartItems = cartItemService.getCartItemsByCartId(cartId);
+//        return ResponseEntity.ok(cartItems);
+//    }
 
-    @PutMapping("/{cartItemId}")
-    public ResponseEntity<CartItem> updateCartItem(@PathVariable Long cartItemId, @RequestParam int quantity) {
-        CartItem updatedItem = cartItemService.updateCartItemQuantity(cartItemId, quantity);
-        return ResponseEntity.ok(updatedItem);
-    }
+//    @PutMapping("/{cartItemId}")
+//    public ResponseEntity<CartItem> updateCartItem(@PathVariable Long cartItemId, @RequestParam int quantity) {
+//        CartItem updatedItem = cartItemService.updateCartItemQuantity(cartItemId, quantity);
+//        return ResponseEntity.ok(updatedItem);
+//    }
 
 }

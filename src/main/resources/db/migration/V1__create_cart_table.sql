@@ -1,9 +1,11 @@
 CREATE TABLE IF NOT EXISTS cart
 (
-    id      BIGSERIAL PRIMARY KEY,
-    token   VARCHAR(255) UNIQUE NOT NULL
+  id UUID     PRIMARY KEY,
+  user_id     BIGINT,
+  expire_date TIMESTAMP,
+  CONSTRAINT id_expire_date_check CHECK
+  (
+    (user_id IS NULL AND expire_date IS NOT NULL) OR
+    (user_id IS NOT NULL AND expire_date IS NULL)
+ )
 );
-
-INSERT INTO cart(token)
-VALUES ('e0cf8529-44dc-4ab6-849b-68a2eb5c31b3'),
-       ('bf8d8e1b-30a8-4577-997a-b4a888368a99')

@@ -40,10 +40,6 @@ public class User implements UserDetails {
     @JoinColumn(name = "role_id")
     private Role role;
 
-    @OneToOne
-    @JoinColumn(name = "cart_id", referencedColumnName = "id")
-    private Cart cart;
-
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return List.of(role);
