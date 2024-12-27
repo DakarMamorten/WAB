@@ -6,6 +6,7 @@ import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Optional;
 import java.util.UUID;
 
 /**
@@ -14,10 +15,10 @@ import java.util.UUID;
 
 public interface CartRepository extends JpaRepository<Cart, UUID> {
     @Query(value = "SELECT c FROM Cart c WHERE c.userId = :userId")
-    Cart findCartByUserID(Long userId);
+    Optional<Cart> findCartByUserID(Long userId);
 
     @Query(value = "SELECT c.id FROM Cart c WHERE c.userId = :userId")
-    UUID findCartIdByUserID(Long userId);
+    Optional<UUID> findCartIdByUserID(Long userId);
 
     @Modifying
     @Transactional

@@ -53,30 +53,32 @@ public class UserIndexController {
                 Integer cartTotal = cartItemService.totalProductByCartId(UUID.fromString(cartToken));
                 model.addAttribute("cartSize", cartTotal);
                 redirectAttributes.addFlashAttribute("cartSize");
-                return  USER_INDEX;
+                return USER_INDEX;
             }
         } else {
             String cartToken = WebUtil.checkToken(request);
             User currentUser = (User) context.getAuthentication().getPrincipal();
-            String tokenFromDb = cartService.findCartIdByUserID(currentUser.getId());
             if (cartToken == null) {
                 Cart cart = cartService.findCartByUserID(currentUser.getId());
                 if (cart == null) {
                     model.addAttribute("cartSize", 0);
                     return USER_INDEX;
                 }
+                //no token, user exist
                 Integer cartTotal = cartItemService.totalProductByUserId(currentUser.getId());
+                final String cartIdByUserID = cartService.findCartIdByUserID(currentUser.getId());
+                response.addCookie( WebUtil.populateCookie(cartIdByUserID));
+
                 model.addAttribute("cartSize", cartTotal);
-            } else if (!cartToken.equals(tokenFromDb)) {
-                //merge 2 carts
+            } else {
                 String newCartToken = cartItemService.mergeCart(cartToken, currentUser.getId());
                 Cookie cookie = WebUtil.populateCookie(newCartToken);
                 response.addCookie(cookie);
                 Integer cartTotal = cartItemService.totalProductByUserId(currentUser.getId());
                 model.addAttribute("cartSize", cartTotal);
+                return USER_INDEX;
             }
         }
-
         return USER_INDEX;
     }
 }
