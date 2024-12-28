@@ -3,15 +3,18 @@ package com.project.wab.service;
 import com.project.wab.domain.Cart;
 import com.project.wab.domain.CartItem;
 import com.project.wab.domain.CartItemId;
+import com.project.wab.dto.CartItemDTO;
 import com.project.wab.repository.CartItemRepository;
 import com.project.wab.repository.CartRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 /**
  * @author "Vladyslav Paun"
@@ -55,7 +58,7 @@ public class CartItemService {
             }
         }
         List<CartItem> cartItemsDb = cartItemRepository.findAllByUserId(userId);
-        // Merge browser cart items into the user's cart
+
         for (CartItem browserItem : cartItemsBrowser) {
             boolean itemExistsInDb = false;
             for (CartItem dbItem : cartItemsDb) {
@@ -65,7 +68,7 @@ public class CartItemService {
                     itemExistsInDb = true;
                     break;
                 }
-            } // If the item does not exist in the user's cart, add it
+            }
             if (!itemExistsInDb) {
                 CartItem newCartItem = new CartItem();
                 newCartItem.setCart(userCart);
@@ -81,5 +84,42 @@ public class CartItemService {
         cartRepository.deleteCartById(UUID.fromString(cartToken));
 
         return userCart.getId().toString();
+    }
+
+    public List<CartItemDTO> getCartItemsDTOByCartId(UUID cartId) {
+        return cartItemRepository.findAllByCartId(cartId).stream()
+                .map(this::convertToDTO)
+                .collect(Collectors.toList());
+    }
+
+    public BigDecimal calculateTotalPriceByCartId(UUID cartId) {
+        return getCartItemsDTOByCartId(cartId).stream()
+                .map(CartItemDTO::getTotal)
+                .reduce(BigDecimal.ZERO, BigDecimal::add);
+    }
+
+
+    private CartItemDTO convertToDTO(CartItem item) {
+        BigDecimal total = item.getProduct().getPrice().multiply(BigDecimal.valueOf(item.getQuantity()));
+        return new CartItemDTO(
+                item.getProduct().getName(),
+                item.getProduct().getPrice(),
+                item.getQuantity(),
+                total,
+                item.getProduct().getId(),
+                item.getProduct().getImagePath()
+        );
+    }
+
+    public void updateCartItemQuantity(Long productId, UUID cartId, int quantity) {
+        CartItem cartItem = cartItemRepository.findByProductIdAndCartId(productId, cartId)
+                .orElseThrow(() -> new RuntimeException("Item not found in shopping cart"));
+        cartItem.setQuantity(quantity);
+        cartItemRepository.save(cartItem);
+    }
+
+
+    public void removeCartItem(Long productId, UUID cartId) {
+        cartItemRepository.deleteByProductIdAndCartId(productId, cartId);
     }
 }

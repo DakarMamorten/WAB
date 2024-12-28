@@ -5,7 +5,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.UUID;
@@ -16,14 +15,21 @@ import java.util.UUID;
 @Controller
 @RequiredArgsConstructor
 @RequestMapping("/cart")
-public class CartDeleteController {
+public class CartUpdateController {
     private final CartItemService cartItemService;
-
-    @PostMapping("/remove")
-    public String removeCartItem(@RequestParam Long productId,
-                                 @RequestParam UUID cartId,
+    @PostMapping("/update")
+    public String updateCartItem(Long productId,
+                                 UUID cartId,
+                                 int quantity,
+                                 String action,
                                  RedirectAttributes redirectAttributes) {
-        cartItemService.removeCartItem(productId, cartId);
+        if ("increase".equals(action)) {
+            quantity++;
+        } else if ("decrease".equals(action) && quantity > 1) {
+            quantity--;
+        }
+
+        cartItemService.updateCartItemQuantity(productId, cartId, quantity);
 
         redirectAttributes.addFlashAttribute("cartItems", cartItemService.getCartItemsDTOByCartId(cartId));
         redirectAttributes.addFlashAttribute("totalPrice", cartItemService.calculateTotalPriceByCartId(cartId));
@@ -31,4 +37,3 @@ public class CartDeleteController {
         return "redirect:/cart/list";
     }
 }
-

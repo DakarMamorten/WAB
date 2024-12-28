@@ -32,16 +32,18 @@
         margin-left: 5px;
     }
     .card {
-        height: 450px;
-        display: flex;
-        flex-direction: column;
-        justify-content: space-between;
+        border: 1px solid #ddd;
+        border-radius: 8px;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        overflow: hidden;
     }
 
     .card-img-top {
-        height: 250px;
-        object-fit: cover;
+        object-fit: contain;
+        aspect-ratio: 1 / 1;
         width: 100%;
+        border-radius: 5px;
+        background-color: #f8f9fa;
     }
 
     .card-body {
