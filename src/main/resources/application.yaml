@@ -15,7 +15,7 @@ spring:
     open-in-view: false
 image:
   upload:
-    dir: ""
+    dir: "${UPLOAD_DIR:./product-images}"
 lock:
   time:
     duration: 5 #Time in minutes
