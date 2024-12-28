@@ -40,7 +40,7 @@ public String showCart(Model model, HttpServletRequest request) {
         UUID cartId = UUID.fromString(cartToken);
         List<CartItemDTO> cartItems = cartItemService.getCartItemsDTOByCartId(cartId);
         BigDecimal totalPrice = cartItemService.calculateTotalPriceByCartId(cartId);
-
+        model.addAttribute("cartId", cartId);
         model.addAttribute("cartItems", cartItems);
         model.addAttribute("totalPrice", totalPrice);
         return "cart/list";
@@ -48,6 +48,7 @@ public String showCart(Model model, HttpServletRequest request) {
     } catch (IllegalArgumentException e) {
         model.addAttribute("cartItems", List.of());
         model.addAttribute("totalPrice", BigDecimal.ZERO);
+
         return "cart/list";
     }
 }

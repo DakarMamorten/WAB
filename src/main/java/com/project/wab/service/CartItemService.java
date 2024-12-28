@@ -105,8 +105,20 @@ public class CartItemService {
                 item.getProduct().getName(),
                 item.getProduct().getPrice(),
                 item.getQuantity(),
-                total
+                total,
+                item.getProduct().getId()
         );
     }
 
+    public void updateCartItemQuantity(Long productId, UUID cartId, int quantity) {
+        CartItem cartItem = cartItemRepository.findByProductIdAndCartId(productId, cartId)
+                .orElseThrow(() -> new RuntimeException("Товар не найден в корзине"));
+        cartItem.setQuantity(quantity);
+        cartItemRepository.save(cartItem);
+    }
+
+
+    public void removeCartItem(Long productId, UUID cartId) {
+        cartItemRepository.deleteByProductIdAndCartId(productId, cartId);
+    }
 }
