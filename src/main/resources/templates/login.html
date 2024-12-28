@@ -3,42 +3,51 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Sign in</title>
+
+    <!-- Font Icon -->
+    <link th:href="@{/fonts/material-icon/css/material-design-iconic-font.min.css}" rel="stylesheet">
+
+    <!-- Main css -->
+    <link th:href="@{/css/style.css}" rel="stylesheet">
 </head>
 <body>
-<div class="container mt-5">
-    <div class="row justify-content-center">
-        <div class="col-md-6">
-            <div class="card shadow-lg">
-                <div class="card-body">
-                    <h3 class="text-center">Login</h3>
-                    <form method="POST" th:action="@{/login}">
-                        <div class="mb-3">
-                            <label for="email" class="form-label">Email</label>
-                            <input type="email" class="form-control" id="email" name="username" placeholder="Enter your email" required>
+<div class="main">
+    <!-- Sign in Form -->
+    <section class="sign-in">
+        <div class="container">
+            <div class="signin-content">
+                <div class="signin-image">
+                    <figure><img th:src="@{/images/signin.jpg}" alt="sign up image"></figure>
+
+                    <a th:href="@{/register}" class="signup-image-link">Create an account</a>
+                </div>
+
+                <div class="signin-form">
+                    <h2 class="form-title">Sign in</h2>
+                    <form method="POST" class="register-form" id="login-form" th:action="@{/login}">
+                        <div class="form-group">
+                            <label for="email"><i class="zmdi zmdi-account material-icons-name"></i></label>
+                            <input type="text" id="email" name="username" placeholder="Email"/>
                         </div>
-                        <div class="mb-3">
-                            <label for="password" class="form-label">Password</label>
-                            <input type="password" class="form-control" id="password" name="password" placeholder="Enter your password" required>
+                        <div class="form-group">
+                            <label for="password"><i class="zmdi zmdi-lock"></i></label>
+                            <input type="password" id="password" name="password" placeholder="Password"/>
                         </div>
-                        <div class="d-grid">
-                            <button type="submit" class="btn btn-primary">Login</button>
+                        <div class="form-group form-button">
+                            <input type="submit" name="signin" id="signin" class="form-submit" value="Log in"/>
                         </div>
                     </form>
-                    <div th:if="${error}" class="mt-3">
-                        <div class="alert alert-danger" role="alert">
-                            <span th:text="${error}"></span>
-                        </div>
-                    </div>
-                    <div class="mt-3 text-center">
-                        <a href="/forgetPassword" class="text-decoration-none">Forgot Password?</a>
-                    </div>
                 </div>
             </div>
         </div>
-    </div>
+    </section>
+
 </div>
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js"></script>
+
+<!-- JS -->
+<script th:src="@{/vendor/jquery/jquery.min.js}"></script>
+<script th:src="@{/js/main.js}"></script>
 </body>
 </html>
