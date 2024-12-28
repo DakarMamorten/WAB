@@ -106,13 +106,14 @@ public class CartItemService {
                 item.getProduct().getPrice(),
                 item.getQuantity(),
                 total,
-                item.getProduct().getId()
+                item.getProduct().getId(),
+                item.getProduct().getImagePath()
         );
     }
 
     public void updateCartItemQuantity(Long productId, UUID cartId, int quantity) {
         CartItem cartItem = cartItemRepository.findByProductIdAndCartId(productId, cartId)
-                .orElseThrow(() -> new RuntimeException("Товар не найден в корзине"));
+                .orElseThrow(() -> new RuntimeException("Item not found in shopping cart"));
         cartItem.setQuantity(quantity);
         cartItemRepository.save(cartItem);
     }
