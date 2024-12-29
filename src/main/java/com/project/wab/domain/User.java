@@ -1,15 +1,14 @@
 package com.project.wab.domain;
+
+import jakarta.persistence.*;
+import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
-import jakarta.persistence.*;
-import lombok.*;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 
 import java.time.LocalDateTime;
-import java.util.Collection;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 
 /**
  * @author "Vladyslav Paun"
@@ -24,8 +23,10 @@ public class User implements UserDetails {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @Column(nullable = false, name = "user_name")
-    private String username;
+    @Column(name = "first_name", nullable = false)
+    private String firstName;
+    @Column(name = "last_name", nullable = false)
+    private String lastName;
     private String password;
     @Column(unique = true, nullable = false, updatable = false)
     private String email;
@@ -39,6 +40,10 @@ public class User implements UserDetails {
     @ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
     @JoinColumn(name = "role_id")
     private Role role;
+
+    @OneToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
+    @JoinColumn(name = "address_id")
+    private Address address;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
@@ -86,4 +91,5 @@ public class User implements UserDetails {
     public int hashCode() {
         return Objects.hash(email);
     }
+
 }

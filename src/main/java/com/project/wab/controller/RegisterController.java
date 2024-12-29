@@ -1,12 +1,11 @@
 package com.project.wab.controller;
 
+import com.project.wab.UserRegisterDto;
 import com.project.wab.service.UserService;
 import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.context.HttpSessionSecurityContextRepository;
 import org.springframework.stereotype.Controller;
@@ -32,16 +31,15 @@ public class RegisterController {
     }
 
     @PostMapping
-    public String registerUser(String name, String email, String password, HttpServletRequest request) {
+    public String registerUser(UserRegisterDto dto, HttpServletRequest request) {
 
-        userService.registerUser(name, email, password);
+        userService.registerUser(dto);
 
-        UsernamePasswordAuthenticationToken authToken =
-                new UsernamePasswordAuthenticationToken(email, password);
-        Authentication authentication = authenticationManager.authenticate(authToken);
+        var authToken = new UsernamePasswordAuthenticationToken(dto.email(), dto.password());
+        var authentication = authenticationManager.authenticate(authToken);
 
         SecurityContextHolder.getContext().setAuthentication(authentication);
-        HttpSession session = request.getSession(true);
+        var session = request.getSession(true);
         session.setAttribute(HttpSessionSecurityContextRepository.SPRING_SECURITY_CONTEXT_KEY,
                 SecurityContextHolder.getContext());
 
