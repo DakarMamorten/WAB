@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta content="width=device-width, initial-scale=1.0" name="viewport">
+    <title>Checkout</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+<div th:insert="~{/user_navbar::content}"></div>
+<div class="container mt-5">
+    <h1>Checkout</h1>
+    <form method="post" novalidate th:action="@{/checkout}" th:object="${addressDTO}">
+        <div class="mb-3">
+            <label class="form-label" for="firstName">First Name</label>
+            <input class="form-control" id="firstName" name="firstName" required th:field="*{firstName}" type="text">
+            <div class="text-danger" th:errors="*{firstName}" th:if="${#fields.hasErrors('firstName')}"></div>
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label" for="lastName">Last Name</label>
+            <input class="form-control" id="lastName" name="lastName" required th:field="*{lastName}" type="text">
+            <div class="text-danger" th:errors="*{lastName}" th:if="${#fields.hasErrors('lastName')}"></div>
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label" for="streetName">Street Name</label>
+            <input class="form-control" id="streetName" name="streetName" required th:field="*{streetName}" type="text">
+            <div class="text-danger" th:errors="*{streetName}" th:if="${#fields.hasErrors('streetName')}"></div>
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label" for="house">House</label>
+            <input class="form-control" id="house" name="house" required th:field="*{house}" type="text">
+            <div class="text-danger" th:errors="*{house}" th:if="${#fields.hasErrors('house')}"></div>
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label" for="flat">Flat (optional)</label>
+            <input class="form-control" id="flat" name="flat" th:field="*{flat}" type="text">
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label" for="postalCode">Postal Code</label>
+            <input class="form-control" id="postalCode" name="postalCode" required th:field="*{postalCode}" type="text">
+            <div class="text-danger" th:errors="*{postalCode}" th:if="${#fields.hasErrors('postalCode')}"></div>
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label" for="city">City</label>
+            <input class="form-control" id="city" name="city" required th:field="*{city}" type="text">
+            <div class="text-danger" th:errors="*{city}" th:if="${#fields.hasErrors('city')}"></div>
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label" for="phone">Phone</label>
+            <input class="form-control" id="phone" name="phone" required th:field="*{phone}" type="text">
+            <div class="text-danger" th:errors="*{phone}" th:if="${#fields.hasErrors('phone')}"></div>
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label" for="email">Email</label>
+            <input class="form-control" id="email" name="email" required th:field="*{email}" type="email">
+            <div class="text-danger" th:errors="*{email}" th:if="${#fields.hasErrors('email')}"></div>
+        </div>
+
+        <button class="btn btn-primary" type="submit">Next</button>
+    </form>
+</div>
+</body>
+</html>
