@@ -4,12 +4,19 @@ import com.project.wab.domain.Product;
 import com.project.wab.dto.ProductDTO;
 import com.project.wab.repository.ProductRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
 import java.util.List;
 
 /**
@@ -18,8 +25,12 @@ import java.util.List;
 @Service
 @RequiredArgsConstructor
 @Transactional
+@Slf4j
 public class ProductService {
     private final ProductRepository productRepository;
+
+    @Value("${image.upload.dir}")
+    private String uploadDir;
 
     public List<Product> getAllProducts() {
         return productRepository.findAll();
@@ -57,20 +68,23 @@ public class ProductService {
         if (file == null || file.isEmpty()) {
             return null;
         }
+
         try {
-            String uploadDir = System.getProperty("user.dir") + "/product-images";
-            File dir = new File(uploadDir);
-            if (!dir.exists()) {
-                dir.mkdirs();
+            Path uploadPath = Paths.get(uploadDir);
+            if (!Files.exists(uploadPath)) {
+                Files.createDirectories(uploadPath);
             }
 
-            String fileName = productId + "_" + file.getOriginalFilename() ;
-            File uploadFile = new File(dir, fileName);
-            file.transferTo(uploadFile);
+            String sanitizedFileName = productId + "_" + file.getOriginalFilename().replaceAll("[^a-zA-Z0-9._-]", "_");
+            Path filePath = uploadPath.resolve(sanitizedFileName);
 
-            return "/product-images/" + fileName;
+            try (InputStream inputStream = file.getInputStream()) {
+                Files.copy(inputStream, filePath, StandardCopyOption.REPLACE_EXISTING);
+            }
+
+            return sanitizedFileName;
         } catch (IOException e) {
-            e.printStackTrace();
+            log.error("Error saving file: {}" , e.getMessage());
             return null;
         }
     }
