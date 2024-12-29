@@ -1,10 +1,12 @@
-//package com.project.wab.repository;
-//
-//import com.project.wab.domain.Order;
-//import org.springframework.data.jpa.repository.JpaRepository;
-//
-///**
-// * @author "Vladyslav Paun"
-// */
-//public interface OrderRepository  extends JpaRepository<Order, Long> {
-//}
+package com.project.wab.repository;
+
+import com.project.wab.domain.order.Order;
+import org.springframework.data.jpa.repository.JpaRepository;
+
+import java.util.UUID;
+
+/**
+ * @author "Vladyslav Paun"
+ */
+public interface OrderRepository  extends JpaRepository<Order, UUID> {
+}

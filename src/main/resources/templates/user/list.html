@@ -22,9 +22,9 @@
         <tbody>
         <tr th:each="user : ${users}">
             <td th:text="${user.id}"></td>
-            <td th:text="${user.name}"></td>
+            <td th:text="${user.username}"></td>
             <td th:text="${user.email}"></td>
-            <td th:text="${user.role}"></td>
+            <td th:text="${user.role.getName()}"></td>
             <td>
                 <button class="btn btn-sm btn-primary" th:attr="data-bs-target=${'#editUserModal' + user.id}" data-bs-toggle="modal">Edit</button>
                 <button class="btn btn-sm btn-danger" th:attr="data-bs-target=${'#deleteUserModal' + user.id}" data-bs-toggle="modal">Delete</button>

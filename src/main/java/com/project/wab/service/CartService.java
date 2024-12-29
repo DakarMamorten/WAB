@@ -3,6 +3,8 @@ package com.project.wab.service;
 import com.project.wab.domain.Cart;
 import com.project.wab.domain.Product;
 import com.project.wab.domain.User;
+import com.project.wab.exception.CartNotFoundException;
+import com.project.wab.exception.ProductNotFoundException;
 import com.project.wab.repository.CartRepository;
 import com.project.wab.repository.ProductRepository;
 import lombok.RequiredArgsConstructor;
@@ -27,6 +29,10 @@ public class CartService {
         return cartRepository.findCartByUserID(userID).orElse(null);
     }
 
+    public Cart findById(String id) {
+        return cartRepository.findById(UUID.fromString(id)).orElseThrow(CartNotFoundException::new);
+    }
+
     public String findCartIdByUserID(Long userId) {
         final Optional<UUID> cartIdByUserID = cartRepository.findCartIdByUserID(userId);
         if (cartIdByUserID.isPresent()) {
@@ -37,8 +43,7 @@ public class CartService {
 
     @Transactional
     public String createAndPopulateCart(Long productId, String cartId, User currentUser) {
-        //todo create ProductNotFoundException
-        Product product = productRepository.findById(productId).orElseThrow(IllegalArgumentException::new);
+        Product product = productRepository.findById(productId).orElseThrow(ProductNotFoundException::new);
 
         if (cartId != null) {
             final Cart cartFromDb = cartRepository.findById(UUID.fromString(cartId)).orElseThrow();
@@ -56,5 +61,9 @@ public class CartService {
             cartServiceHelper.populateCart(product, cart);
             return cart.getId().toString();
         }
+    }
+
+    public void delete(Cart cart) {
+        cartRepository.delete(cart);
     }
 }

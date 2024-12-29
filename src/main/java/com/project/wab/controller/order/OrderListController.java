@@ -1,6 +1,6 @@
 //package com.project.wab.controller.order;
 //
-//import com.project.wab.domain.Order;
+//import com.project.wab.domain.order.Order;
 //import com.project.wab.service.OrderService;
 //import lombok.RequiredArgsConstructor;
 //import org.springframework.stereotype.Controller;

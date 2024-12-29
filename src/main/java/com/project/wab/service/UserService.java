@@ -1,7 +1,9 @@
 package com.project.wab.service;
 
+import com.project.wab.UserRegisterDto;
 import com.project.wab.domain.Role;
 import com.project.wab.domain.User;
+import com.project.wab.exception.UserNotFoundException;
 import com.project.wab.repository.RoleRepository;
 import com.project.wab.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -29,36 +31,32 @@ public class UserService {
                 .toList();
     }
 
-    public User getUserById(Long id) {
-        return userRepository.findById(id).orElseThrow(() -> new RuntimeException("User not found"));
-    }
-
-    public User saveUser(User user) {
-        return userRepository.save(user);
-    }
-
     public void deleteUser(Long id) {
         userRepository.deleteById(id);
     }
 
-    public User findById(Long id) {
-        return userRepository.findById(id).orElseThrow(() -> new RuntimeException("User not found"));
-
-    }
-
     @Transactional
-    public void registerUser(String username, String email, String password) {
+    public void registerUser(UserRegisterDto dto) {
         Role userRole = roleRepository.findByName("ROLE_USER")
                 .orElseThrow(() -> new RuntimeException("Default role not found"));
 
         User user = new User();
-        user.setUsername(username);
-        user.setEmail(email);
-        user.setPassword(passwordEncoder.encode(password));
+        user.setFirstName(dto.name());
+        user.setLastName(dto.surname());
+        user.setEmail(dto.email());
+        user.setPassword(passwordEncoder.encode(dto.password()));
         user.setEnabled(true);
         user.setAccountNonLocked(true);
         user.setRole(userRole);
-       userRepository.save(user);
+        userRepository.save(user);
+    }
+
+    public User getReferenceById(Long userId) {
+        return userRepository.getReferenceById(userId);
+    }
+
+    public User findById(Long id) {
+        return userRepository.findById(id).orElseThrow(UserNotFoundException::new);
     }
 }
 

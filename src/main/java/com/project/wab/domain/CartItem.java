@@ -1,9 +1,7 @@
 package com.project.wab.domain;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 /**
@@ -28,4 +26,5 @@ public class CartItem {
     @ManyToOne
     @JoinColumn(name = "product_id", nullable = false)
     private Product product;
+
 }
