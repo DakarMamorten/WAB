@@ -1,14 +1,15 @@
 package com.project.wab.controller.product;
 
-import com.project.wab.domain.Product;
+import com.project.wab.dto.ProductDTO;
 import com.project.wab.service.ProductService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 
-import java.math.BigDecimal;
-import java.util.ArrayList;
 
 /**
  * @author "Vladyslav Paun"
@@ -21,10 +22,15 @@ public class ProductAddController {
 
     private final ProductService productService;
 
+    @GetMapping("/add")
+    public String showAddProductForm(Model model) {
+        model.addAttribute("productDTO", new ProductDTO());
+        return "product/list";
+    }
+
     @PostMapping("/add")
-    public String add(final String name, final String description, final BigDecimal price, final String brand) {
-        Product product = new Product(null, name, description, price, brand, "");
-        productService.saveProduct(product);
+    public String addProduct(@ModelAttribute ProductDTO productDTO) {
+        productService.saveProductWithImage(productDTO);
         return "redirect:/product/list";
     }
 }
