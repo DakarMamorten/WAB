@@ -6,7 +6,7 @@ CREATE TABLE IF NOT EXISTS addresses
     street_name VARCHAR(255) NOT NULL,
     house       VARCHAR(50)  NOT NULL,
     flat        VARCHAR(50),
-    postal_code VARCHAR(5)   NOT NULL,
+    postal_code VARCHAR(6)   NOT NULL,
     city        VARCHAR(255) NOT NULL,
     phone       VARCHAR(20)  NOT NULL,
     email       VARCHAR(255) NOT NULL UNIQUE

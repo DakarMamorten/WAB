@@ -36,7 +36,7 @@ public class Address {
     private String flat;
 
     @NotBlank(message = "Postal code is mandatory")
-    @Pattern(regexp = "\\d{5}", message = "Postal code must be 5 digits")
+    @Pattern(regexp = "\\d{2}-\\d{3}", message = "Postal code must be 5 digits")
     @Column(name = "postal_code", nullable = false)
     private String postalCode;
 

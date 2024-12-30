@@ -15,7 +15,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
-import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
@@ -33,7 +32,7 @@ public class OrderService {
         if (cart.getUserId() != null) {
             var user = userService.findById(cart.getUserId());
             order.setUser(user);
-            order.setAddress(user.getAddress());
+            order.setAddress(address);
         } else {
             order.setAddress(address);
         }
@@ -77,9 +76,5 @@ public class OrderService {
         cookie.setPath("/");
         cookie.setMaxAge(0);
         response.addCookie(cookie);
-    }
-    public Order findById(UUID orderId) {
-        return orderRepository.findById(orderId)
-                .orElseThrow(() -> new IllegalArgumentException("Order not found with id: " + orderId));
     }
 }
