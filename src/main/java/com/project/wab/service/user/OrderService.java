@@ -7,12 +7,15 @@ import com.project.wab.domain.order.*;
 import com.project.wab.repository.OrderRepository;
 import com.project.wab.service.CartService;
 import com.project.wab.service.UserService;
+import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
@@ -67,5 +70,16 @@ public class OrderService {
         cartService.delete(cart);
 
         return order;
+    }
+
+    public void removeCartCookie(HttpServletResponse response){
+        Cookie cookie = new Cookie("cartToken", null);
+        cookie.setPath("/");
+        cookie.setMaxAge(0);
+        response.addCookie(cookie);
+    }
+    public Order findById(UUID orderId) {
+        return orderRepository.findById(orderId)
+                .orElseThrow(() -> new IllegalArgumentException("Order not found with id: " + orderId));
     }
 }

@@ -25,7 +25,7 @@ public class AddressDTO {
     private String flat;
 
     @NotBlank(message = "Postal code is mandatory")
-    @Pattern(regexp = "\\d{2}-\\d{3}", message = "Postal code must be 5 digits")
+    @Pattern(regexp = "\\d{5}", message = "Postal code must be 5 digits")
     private String postalCode;
 
     @NotBlank(message = "City is mandatory")
