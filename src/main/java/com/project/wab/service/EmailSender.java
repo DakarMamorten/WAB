@@ -2,7 +2,6 @@ package com.project.wab.service;
 
 import com.project.wab.dto.Email;
 import com.project.wab.exception.SendGridException;
-import com.project.wab.listener.PasswordResetEvent;
 import com.sendgrid.Method;
 import com.sendgrid.Request;
 import com.sendgrid.Response;
@@ -20,7 +19,9 @@ import java.io.IOException;
 import java.util.Locale;
 import java.util.Map;
 
-
+/**
+ * @author "Vladyslav Paun"
+ */
 @Component
 @Slf4j
 @RequiredArgsConstructor
@@ -29,8 +30,7 @@ public class EmailSender {
     private final TemplateEngine htmlTemplateEngine;
     private final SendGrid sendGrid;
 
-    public void send(PasswordResetEvent event) {
-        Email email = new Email();
+    public void send(Email email) {
         log.debug("Starting prepare message for send to recipient: {}...", email.getRecipientEmail());
         com.sendgrid.helpers.mail.objects.Email from = new com.sendgrid.helpers.mail.objects.Email(ADMIN_EMAIL);
         String subject = email.getSubject();

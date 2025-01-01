@@ -12,6 +12,7 @@ import com.project.wab.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -58,10 +59,6 @@ public class UserService {
         userRepository.save(user);
     }
 
-    public User getReferenceById(Long userId) {
-        return userRepository.getReferenceById(userId);
-    }
-
     public User findById(Long id) {
         return userRepository.findById(id).orElseThrow(UserNotFoundException::new);
     }
@@ -75,6 +72,7 @@ public class UserService {
         return userRepository.findByEmail(username.trim()).isPresent();
     }
 
+    @Transactional
     public void createPasswordResetTokenForUser(String email) {
         var user = findByEmail(email);
 
@@ -86,6 +84,12 @@ public class UserService {
 
         eventPublisher.publishEvent(new PasswordResetEvent(this, email, tokenFromDb.getToken(), user.getFullName()));
 
+    }
+
+    public void changePassword(Long id, String newPassword) {
+        var user = findById(id);
+        user.setPassword(new BCryptPasswordEncoder(10).encode(newPassword));
+        userRepository.save(user);
     }
 }
 

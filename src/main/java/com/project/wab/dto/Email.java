@@ -5,6 +5,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.io.Serializable;
+import java.util.HashMap;
 import java.util.Map;
 
 @Getter
@@ -15,7 +16,7 @@ public class Email implements Serializable {
     private String recipientEmail;
     private String subject;
     private String template;
-    private Map<String, String> templateData;
+    private Map<String, String> templateData = new HashMap<>();
 
     public Email(final String recipientEmail,
                  final String subject,

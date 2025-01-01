@@ -3,6 +3,9 @@ package com.project.wab.listener;
 import lombok.Getter;
 import org.springframework.context.ApplicationEvent;
 
+/**
+ * @author "Vladyslav Paun"
+ */
 @Getter
 public class PasswordResetEvent extends ApplicationEvent {
 
