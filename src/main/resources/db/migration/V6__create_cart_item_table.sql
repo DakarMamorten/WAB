@@ -1,12 +1,12 @@
-CREATE TABLE IF NOT EXISTS cart_item
+create table if not exists cart_item
 (
-    cart_id    UUID NOT NULL,
-    product_id BIGINT NOT NULL,
-    quantity   INT NOT NULL,
-    PRIMARY KEY (cart_id, product_id),
-    FOREIGN KEY (cart_id) references cart (id),
-    FOREIGN KEY (product_id) references products (id)
+    cart_id    uuid   not null,
+    product_id bigint not null,
+    quantity   int    not null,
+    constraint pk_cart_item primary key (cart_id, product_id),
+    constraint fk_cart_item1 foreign key (cart_id) references cart (id),
+    constraint fk_cart_item2 foreign key (product_id) references product (id)
 );
 
-CREATE INDEX idx_cart_item_cart_id ON cart_item (cart_id);
-CREATE INDEX idx_cart_item_product_id ON cart_item (product_id);
+create index idx_cart_item1 on cart_item (cart_id);
+create index idx_cart_item2 on cart_item (product_id);

@@ -1,26 +1,29 @@
-CREATE TABLE IF NOT EXISTS role
+create table if not exists role
 (
-    id   BIGSERIAL PRIMARY KEY,
-    name VARCHAR(30) NOT NULL
+    id   bigserial   not null,
+    name varchar(30) not null,
+    constraint pk_role primary key (id),
+    constraint uq_role unique (name)
 );
 
-CREATE TABLE IF NOT EXISTS users
+create table if not exists users
 (
-    id                  BIGSERIAL PRIMARY KEY,
-    first_name          VARCHAR(100) NOT NULL,
-    last_name           VARCHAR(100) NOT NULL,
-    email               VARCHAR(50)  NOT NULL UNIQUE,
-    password            VARCHAR(256) NOT NULL,
-    lock_time           TIMESTAMP,
-    enabled             BOOLEAN DEFAULT true,
-    account_non_locked  BOOLEAN DEFAULT true,
-    failed_attempt      INTEGER DEFAULT 0,
-    role_id             BIGINT,
-    address_id          BIGINT,
-    FOREIGN KEY (role_id) references role (id),
-    FOREIGN KEY (address_id) references addresses (id)
+    id                 bigserial    not null,
+    first_name         varchar(100) not null,
+    last_name          varchar(100) not null,
+    email              varchar(50)  not null,
+    password           varchar(256) not null,
+    lock_time          timestamp,
+    enabled            boolean default true,
+    account_non_locked boolean default true,
+    failed_attempt     integer default 0,
+    role_id            bigint,
+    address_id         bigint,
+    constraint pk_user primary key (id),
+    constraint uq_user unique (email),
+    constraint fk_user1 foreign key (role_id) references role (id),
+    constraint fk_user2 foreign key (address_id) references address (id)
 );
 
-CREATE INDEX idx_users_role_id ON users(role_id);
-CREATE INDEX idx_users_address_id ON users(address_id);
-CREATE INDEX idx_users_email ON users(email);
+create index idx_users1 on users (role_id);
+create index idx_users2 on users (address_id);

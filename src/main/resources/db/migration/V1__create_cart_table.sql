@@ -1,11 +1,13 @@
-CREATE TABLE IF NOT EXISTS cart
+create table if not exists cart
 (
-  id UUID     PRIMARY KEY,
-  user_id     BIGINT,
-  expire_date TIMESTAMP,
-  CONSTRAINT id_expire_date_check CHECK
-  (
-    (user_id IS NULL AND expire_date IS NOT NULL) OR
-    (user_id IS NOT NULL AND expire_date IS NULL)
- )
+    id          uuid not null,
+    user_id     bigint,
+    expire_date timestamp,
+    constraint pk_cart primary key (id),
+    constraint id_expire_date_check check
+        (
+        (user_id is null and expire_date is not null)
+            or
+        (user_id is not null and expire_date is null)
+        )
 );

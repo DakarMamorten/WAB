@@ -31,4 +31,10 @@ public class WebUtil {
         cookie.setMaxAge(MAX_AGE);
         return cookie;
     }
+
+    public static Cookie removeCookie() {
+        Cookie removeCookie = new Cookie("cartToken", "");
+        removeCookie.setMaxAge(0);
+        return removeCookie;
+    }
 }

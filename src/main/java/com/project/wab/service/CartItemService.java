@@ -92,11 +92,11 @@ public class CartItemService {
                 .collect(Collectors.toList());
     }
 
-    public BigDecimal calculateTotalPriceByCartId(UUID cartId) {
-        return getCartItemsDTOByCartId(cartId).stream()
-                .map(CartItemDTO::getTotal)
-                .reduce(BigDecimal.ZERO, BigDecimal::add);
-    }
+//    public BigDecimal calculateTotalPriceByCartId(UUID cartId) {
+//        return getCartItemsDTOByCartId(cartId).stream()
+//                .map(CartItemDTO::getTotal)
+//                .reduce(BigDecimal.ZERO, BigDecimal::add);
+//    }
 
 
     private CartItemDTO convertToDTO(CartItem item) {

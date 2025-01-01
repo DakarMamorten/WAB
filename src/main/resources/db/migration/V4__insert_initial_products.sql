@@ -1,4 +1,4 @@
-INSERT INTO products (name, description, price, brand,image_path) VALUES
+INSERT INTO product (name, description, price, brand,image_path) VALUES
                                                                       ('Gucci', 'Stylish womens handbag', 8075.99, 'Gucci','gucci_1.png'),
                                                                       ('Prada', 'Elegant womens handbag', 7092.99 , 'Prada','prada_2.jpg'),
                                                                       ('Louis Vuitton', 'Exclusive womens handbag', 1799.99, 'Louis Vuitton','Louis_Vuitton_3.jpg'),

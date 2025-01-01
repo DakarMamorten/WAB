@@ -1,7 +1,7 @@
 package com.project.wab.controller.cart;
 
-import com.project.wab.dto.CartItemDTO;
-import com.project.wab.service.CartItemService;
+import com.project.wab.service.CartService;
+import com.project.wab.utils.CartHelper;
 import com.project.wab.utils.WebUtil;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
@@ -21,37 +21,34 @@ import java.util.UUID;
 @RequiredArgsConstructor
 @RequestMapping("/cart")
 public class CartListController {
+    private final CartService cartService;
 
-    private final CartItemService cartItemService;
-// Check is token (if token is blank - return cart/list)
-// if ok - get products and return cart/list
-// if bad token return cart/list
-@GetMapping("/list")
-public String showCart(Model model, HttpServletRequest request) {
-    String cartToken = WebUtil.checkToken(request);
+    @GetMapping("/list")
+    public String showCart(Model model, HttpServletRequest request) {
+        var cartToken = WebUtil.checkToken(request);
 
-    if (cartToken == null || cartToken.isBlank()) {
-        model.addAttribute("cartItems", List.of());
-        model.addAttribute("totalPrice", BigDecimal.ZERO);
-        return "cart/list";
+        if (cartToken == null || cartToken.isBlank()) {
+            model.addAttribute("cartItems", List.of());
+            model.addAttribute("totalPrice", BigDecimal.ZERO);
+            return "cart/list";
+        }
+
+        try {
+            var cartId = UUID.fromString(cartToken);
+            var cartItems = cartService.getCartItemsDto(cartId);
+
+            model.addAttribute("cartId", cartId);
+            model.addAttribute("cartItems", cartItems);
+            model.addAttribute("totalPrice", CartHelper.calculateCartTotal(cartItems));
+            return "cart/list";
+
+        } catch (IllegalArgumentException e) {
+            model.addAttribute("cartItems", List.of());
+            model.addAttribute("totalPrice", BigDecimal.ZERO);
+
+            return "cart/list";
+        }
     }
-
-    try {
-        UUID cartId = UUID.fromString(cartToken);
-        List<CartItemDTO> cartItems = cartItemService.getCartItemsDTOByCartId(cartId);
-        BigDecimal totalPrice = cartItemService.calculateTotalPriceByCartId(cartId);
-        model.addAttribute("cartId", cartId);
-        model.addAttribute("cartItems", cartItems);
-        model.addAttribute("totalPrice", totalPrice);
-        return "cart/list";
-
-    } catch (IllegalArgumentException e) {
-        model.addAttribute("cartItems", List.of());
-        model.addAttribute("totalPrice", BigDecimal.ZERO);
-
-        return "cart/list";
-    }
-}
 
 }
 

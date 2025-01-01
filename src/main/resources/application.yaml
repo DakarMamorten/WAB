@@ -12,6 +12,9 @@ spring:
     properties:
       hibernate:
         format_sql: true
+        jdbc:
+          batch_size: 10
+        order_updates: true
     open-in-view: false
 image:
   upload:

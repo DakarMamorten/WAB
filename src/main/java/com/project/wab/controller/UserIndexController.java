@@ -1,12 +1,9 @@
 package com.project.wab.controller;
 
-import com.project.wab.domain.Cart;
 import com.project.wab.domain.User;
-import com.project.wab.service.CartItemService;
 import com.project.wab.service.CartService;
 import com.project.wab.service.ProductService;
 import com.project.wab.utils.WebUtil;
-import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
@@ -16,8 +13,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import java.util.Map;
 import java.util.UUID;
 
 /**
@@ -28,57 +25,37 @@ import java.util.UUID;
 @RequiredArgsConstructor
 @RequestMapping("/")
 public class UserIndexController {
-    public static final String USER_INDEX = "user_index";
     private final ProductService productService;
-    private final CartItemService cartItemService;
     private final CartService cartService;
 
     @GetMapping("/")
     public String userIndex(@CurrentSecurityContext SecurityContext context,
                             Model model,
                             HttpServletRequest request,
-                            HttpServletResponse response,
-                            RedirectAttributes redirectAttributes) {
+                            HttpServletResponse response) {
         var products = productService.getAllProducts();
         model.addAttribute("products", products);
 
         Object principal = context.getAuthentication().getPrincipal();
+        var cartToken = WebUtil.checkToken(request);
+        var cartId = cartToken == null ? null : UUID.fromString(cartToken);
 
-        if (principal.equals("anonymousUser")) {
-            String cartToken = WebUtil.checkToken(request);
+        if ("anonymousUser".equals(principal)) {
             if (cartToken == null) {
                 model.addAttribute("cartSize", 0);
-                return USER_INDEX;
             } else {
-                Integer cartTotal = cartItemService.totalProductByCartId(UUID.fromString(cartToken));
-                model.addAttribute("cartSize", cartTotal);
-                redirectAttributes.addFlashAttribute("cartSize");
-                return USER_INDEX;
+                final Map<String, Object> map = cartService.mergeAndDeleteCart(cartId, null);
+                model.addAttribute("cartSize", map.get("p_total"));
             }
         } else {
-            String cartToken = WebUtil.checkToken(request);
-            User currentUser = (User) context.getAuthentication().getPrincipal();
-            if (cartToken == null) {
-                Cart cart = cartService.findCartByUserID(currentUser.getId());
-                if (cart == null) {
-                    model.addAttribute("cartSize", 0);
-                    return USER_INDEX;
-                }
-                //no token, user exist
-                Integer cartTotal = cartItemService.totalProductByUserId(currentUser.getId());
-                final String cartIdByUserID = cartService.findCartIdByUserID(currentUser.getId());
-                response.addCookie( WebUtil.populateCookie(cartIdByUserID));
-
-                model.addAttribute("cartSize", cartTotal);
-            } else {
-                String newCartToken = cartItemService.mergeCart(cartToken, currentUser.getId());
-                Cookie cookie = WebUtil.populateCookie(newCartToken);
-                response.addCookie(cookie);
-                Integer cartTotal = cartItemService.totalProductByUserId(currentUser.getId());
-                model.addAttribute("cartSize", cartTotal);
-                return USER_INDEX;
+            var currentUser = (User) context.getAuthentication().getPrincipal();
+            var map = cartService.mergeAndDeleteCart(cartId, currentUser.getId());
+            model.addAttribute("cartSize", map.get("p_total"));
+            var pCartId = map.get("p_cart_id");
+            if (pCartId != null) {
+                response.addCookie(WebUtil.populateCookie(pCartId.toString()));
             }
         }
-        return USER_INDEX;
+        return "user_index";
     }
 }

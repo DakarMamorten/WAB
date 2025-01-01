@@ -1,6 +1,7 @@
 package com.project.wab.controller.cart;
 
 import com.project.wab.service.CartItemService;
+import com.project.wab.utils.CartHelper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -17,6 +18,7 @@ import java.util.UUID;
 @RequestMapping("/cart")
 public class CartUpdateController {
     private final CartItemService cartItemService;
+
     @PostMapping("/update")
     public String updateCartItem(Long productId,
                                  UUID cartId,
@@ -31,8 +33,9 @@ public class CartUpdateController {
 
         cartItemService.updateCartItemQuantity(productId, cartId, quantity);
 
-        redirectAttributes.addFlashAttribute("cartItems", cartItemService.getCartItemsDTOByCartId(cartId));
-        redirectAttributes.addFlashAttribute("totalPrice", cartItemService.calculateTotalPriceByCartId(cartId));
+        var cartItems = cartItemService.getCartItemsDTOByCartId(cartId);
+        redirectAttributes.addFlashAttribute("cartItems", cartItems);
+        redirectAttributes.addFlashAttribute("totalPrice", CartHelper.calculateCartTotal(cartItems));
 
         return "redirect:/cart/list";
     }

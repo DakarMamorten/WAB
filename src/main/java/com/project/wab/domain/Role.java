@@ -10,12 +10,16 @@ import jakarta.persistence.OneToMany;
 import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
+
+import jakarta.persistence.Table;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
 import org.springframework.security.core.GrantedAuthority;
 
 /**
@@ -28,6 +32,7 @@ import org.springframework.security.core.GrantedAuthority;
 @ToString(exclude = "users")
 @NoArgsConstructor
 @AllArgsConstructor
+@Table(name = "role")
 public class Role implements GrantedAuthority {
 
   @Id
@@ -36,6 +41,7 @@ public class Role implements GrantedAuthority {
   @Column(unique = true, nullable = false, updatable = false)
   private String name;
   @OneToMany(mappedBy = "role", cascade = {CascadeType.MERGE, CascadeType.PERSIST})
+  @Fetch(FetchMode.SUBSELECT)
   @Setter(AccessLevel.PRIVATE)
   private transient Set<User> users = new HashSet<>();
 

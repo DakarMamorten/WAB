@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
 <head>
     <meta charset="UTF-8">
     <meta content="width=device-width, initial-scale=1.0" name="viewport">
@@ -14,11 +14,17 @@
             vertical-align: middle;
             text-align: center;
         }
-        .product-img {
+
+        .table td, .table th {
+            vertical-align: middle;
+            text-align: center;
+        }
+
+        .img-thumbnail {
             width: 80px;
             height: 80px;
             object-fit: cover;
-            border-radius: 8px;
+            margin-right: 10px;
         }
     </style>
 </head>
@@ -29,33 +35,37 @@
         <div class="row justify-content-center">
             <div class="col-12 col-lg-8">
                 <div class="alert alert-success text-center">
-                    <h1>Thank you for your order!!</h1>
-                    <p>Your order will be success.</p>
-                    <p>Order #: <span th:text="${orderId}"></span></p>
-                    <p>Order Status: <span th:text="${orderState}"></span></p>
-                    <p>Pay status: <span th:text="${orderStatus}"></span></p>
-                    <p>Delivery status: <span th:text="${shipmentState}"></span></p>
-                    <p>total price: <span th:text="${totalPrice} + ' zł'"></span></p>
+                    <h1 th:text="'Thank you for your order!!'"></h1>
+                    <p th:text="'Your order will be success.'"></p>
+                    <p th:text="'Order #: ' + ${order.id}"></p>
+                    <p th:text="'Order Status: ' + ${order.state}"></p>
+                    <p th:text="'Payment Status: '+${order.paymentState}"></p>
+                    <p th:text="'Delivery status: ' + ${order.shipmentState}"></p>
+                    <p th:text="'Total price: ' + ${order.totalPrice}+ ' zł'"></p>
                 </div>
                 <table class="table table-striped">
                     <thead>
                     <tr>
-                        <th>Image</th>
-                        <th>Product Name</th>
-                        <th>Order State</th>
-                        <th>Payment Status</th>
-                        <th>Shipment Status</th>
+                        <th>Product</th>
+                        <th>Price</th>
+                        <th>Quantity</th>
+                        <th>Total</th>
                     </tr>
                     </thead>
                     <tbody>
                     <tr th:each="item : ${order.items}">
+
                         <td>
-                            <img th:src="@{|/product-images/${item.product.imagePath}|}" alt="Product Image" class="product-img">
+                            <div class="d-flex align-items-center">
+                                <img th:src="@{'/product-images/' + ${item.productImagePath}}"
+                                     alt="Product Image"
+                                     class="img-thumbnail me-3">
+                                <span th:text="${item.productName}"></span>
+                            </div>
                         </td>
-                        <td th:text="${item.product.name}"></td>
+                        <td th:text="${item.price} + ' zł'"></td>
                         <td th:text="${item.quantity}"></td>
-                        <td th:text="${item.priceAtTimeOfOrder} + ' zł'"></td>
-                        <td th:text="${item.order.paymentState}"></td>
+                        <td th:text="${item.total}"></td>
                     </tr>
                     </tbody>
                 </table>
@@ -68,32 +78,3 @@
 </header>
 </body>
 </html>
-
-
-
-
-
-
-
-
-
-
-<!--<!DOCTYPE html>-->
-<!--<html lang="en">-->
-<!--<head>-->
-<!--    <meta charset="UTF-8">-->
-<!--    <meta content="width=device-width, initial-scale=1.0" name="viewport">-->
-<!--    <title>Checkout Success</title>-->
-<!--</head>-->
-<!--<body>-->
-<!--<div class="container mt-5">-->
-<!--    <h1>Thank you for your order!</h1>-->
-<!--    <p>Order # <span th:text="${orderId}"></span></p>-->
-<!--    <p>Order status <span th:text="${orderState}"></span></p>-->
-<!--    <p>Payment status <span th:text="${paymentStatus}"></span></p>-->
-<!--    <p>Shipment state <span th:text="${shipmentState}"></span></p>-->
-<!--    <p>Total price <span th:text="${totalPrice}"></span> zl</p>-->
-<!--    <a class="btn btn-primary" href="/">Return to Shop</a>-->
-<!--</div>-->
-<!--</body>-->
-<!--</html>-->

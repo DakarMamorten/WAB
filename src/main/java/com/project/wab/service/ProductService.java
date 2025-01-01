@@ -6,11 +6,12 @@ import com.project.wab.repository.ProductRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.cache.annotation.CacheConfig;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Files;
@@ -18,33 +19,38 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * @author "Vladyslav Paun"
  */
 @Service
 @RequiredArgsConstructor
-@Transactional
 @Slf4j
+@CacheConfig(cacheNames = "ProductCache")
 public class ProductService {
     private final ProductRepository productRepository;
 
     @Value("${image.upload.dir}")
     private String uploadDir;
 
+    @Cacheable(key = "'allProducts'")
     public List<Product> getAllProducts() {
         return productRepository.findAll();
     }
 
+    @Cacheable(key = "#id")
     public Product getProductById(Long id) {
         return productRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Product not found"));
     }
 
-    public Product saveProduct(Product product) {
-        return productRepository.save(product);
+    @CacheEvict(allEntries = true)
+    public void saveProduct(Product product) {
+        productRepository.save(product);
     }
 
+    @CacheEvict(key = "#id")
     public void deleteProduct(Long id) {
         productRepository.deleteById(id);
     }
@@ -75,7 +81,7 @@ public class ProductService {
                 Files.createDirectories(uploadPath);
             }
 
-            String sanitizedFileName = productId + "_" + file.getOriginalFilename().replaceAll("[^a-zA-Z0-9._-]", "_");
+            String sanitizedFileName = productId + "_" + Objects.requireNonNull(file.getOriginalFilename()).replaceAll("[^a-zA-Z0-9._-]", "_");
             Path filePath = uploadPath.resolve(sanitizedFileName);
 
             try (InputStream inputStream = file.getInputStream()) {
@@ -84,7 +90,7 @@ public class ProductService {
 
             return sanitizedFileName;
         } catch (IOException e) {
-            log.error("Error saving file: {}" , e.getMessage());
+            log.error("Error saving file: {}", e.getMessage());
             return null;
         }
     }
