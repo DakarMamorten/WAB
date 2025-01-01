@@ -16,6 +16,8 @@ spring:
           batch_size: 10
         order_updates: true
     open-in-view: false
+  sendgrid:
+    api-key: ${SENDGRID_API_KEY}
 image:
   upload:
     dir: "${UPLOAD_DIR:./product-images}"
