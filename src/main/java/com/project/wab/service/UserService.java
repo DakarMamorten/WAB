@@ -1,13 +1,15 @@
 package com.project.wab.service;
 
 import com.project.wab.UserRegisterDto;
+import com.project.wab.domain.Address;
 import com.project.wab.domain.Role;
 import com.project.wab.domain.User;
+import com.project.wab.dto.AddressDTO;
 import com.project.wab.exception.UserNotFoundException;
+import com.project.wab.mapper.AddressMapper;
 import com.project.wab.repository.RoleRepository;
 import com.project.wab.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -24,7 +26,7 @@ public class UserService {
     private final UserRepository userRepository;
     private final RoleRepository roleRepository;
     private final PasswordEncoder passwordEncoder;
-
+    private final AddressMapper addressMapper;
     public List<User> getAllUsers() {
         Iterable<User> users = userRepository.findAll();
         return StreamSupport
@@ -60,9 +62,20 @@ public class UserService {
         return userRepository.findById(id).orElseThrow(UserNotFoundException::new);
     }
 
-    public User findByEmail(String email) {
-        return userRepository.findByEmail(email)
-                .orElseThrow(() -> new UsernameNotFoundException("User not found with email: " + email));
+    public AddressDTO getAddressByUserEmail(String email) {
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new RuntimeException("User not found with email: " + email));
+        return addressMapper.AddressToAddressDto(user.getAddress());
+    }
+
+    @Transactional
+    public void updateAddress(AddressDTO addressDTO) {
+        User user = userRepository.findByEmail(addressDTO.getEmail())
+                .orElseThrow(() -> new RuntimeException("User not found with email: " + addressDTO.getEmail()));
+        Address address = user.getAddress();
+        addressMapper.updateAddressFromDto(address, addressDTO);
+
+        userRepository.save(user);
     }
 }
 
