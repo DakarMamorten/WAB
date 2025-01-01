@@ -29,6 +29,7 @@
     <properties>
         <java.version>21</java.version>
         <mapstruct.version>1.5.5.Final</mapstruct.version>
+        <sendgrid-java.version>4.9.3</sendgrid-java.version>
     </properties>
     <dependencies>
         <dependency>
@@ -54,6 +55,11 @@
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-web</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.sendgrid</groupId>
+            <artifactId>sendgrid-java</artifactId>
+            <version>${sendgrid-java.version}</version>
         </dependency>
         <dependency>
             <groupId>org.flywaydb</groupId>

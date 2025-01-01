@@ -1,13 +1,18 @@
 package com.project.wab.service;
 
 import com.project.wab.UserRegisterDto;
+import com.project.wab.domain.PasswordResetToken;
 import com.project.wab.domain.Role;
 import com.project.wab.domain.User;
 import com.project.wab.exception.UserNotFoundException;
+import com.project.wab.listener.PasswordResetEvent;
+import com.project.wab.repository.PasswordResetTokenRepository;
 import com.project.wab.repository.RoleRepository;
 import com.project.wab.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -24,6 +29,8 @@ public class UserService {
     private final UserRepository userRepository;
     private final RoleRepository roleRepository;
     private final PasswordEncoder passwordEncoder;
+    private final PasswordResetTokenRepository passwordResetTokenRepository;
+    private final ApplicationEventPublisher eventPublisher;
 
     public List<User> getAllUsers() {
         Iterable<User> users = userRepository.findAll();
@@ -52,10 +59,6 @@ public class UserService {
         userRepository.save(user);
     }
 
-    public User getReferenceById(Long userId) {
-        return userRepository.getReferenceById(userId);
-    }
-
     public User findById(Long id) {
         return userRepository.findById(id).orElseThrow(UserNotFoundException::new);
     }
@@ -63,6 +66,30 @@ public class UserService {
     public User findByEmail(String email) {
         return userRepository.findByEmail(email)
                 .orElseThrow(() -> new UsernameNotFoundException("User not found with email: " + email));
+    }
+
+    public boolean userIsExist(String username) {
+        return userRepository.findByEmail(username.trim()).isPresent();
+    }
+
+    @Transactional
+    public void createPasswordResetTokenForUser(String email) {
+        var user = findByEmail(email);
+
+        var tokenFromDb = passwordResetTokenRepository
+                .findByUserId(user.getId())
+                .orElseGet(
+                        () -> passwordResetTokenRepository.save(new PasswordResetToken(user))
+                );
+
+        eventPublisher.publishEvent(new PasswordResetEvent(this, email, tokenFromDb.getToken(), user.getFullName()));
+
+    }
+
+    public void changePassword(Long id, String newPassword) {
+        var user = findById(id);
+        user.setPassword(new BCryptPasswordEncoder(10).encode(newPassword));
+        userRepository.save(user);
     }
 }
 

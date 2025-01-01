@@ -298,6 +298,13 @@ figure {
   display: block;
   text-align: center; }
 
+.forgot-password-link {
+  font-size: 14px;
+  margin-top: 8px;
+  color: #222;
+  display: block;
+  text-align: left; }
+
 .term-service {
   font-size: 13px;
   color: #222; }
