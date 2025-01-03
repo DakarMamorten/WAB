@@ -2,6 +2,7 @@ package com.project.wab.service;
 
 import com.project.wab.domain.Product;
 import com.project.wab.dto.ProductDTO;
+import com.project.wab.mapper.ProductMapper;
 import com.project.wab.repository.ProductRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -10,6 +11,7 @@ import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
@@ -30,13 +32,23 @@ import java.util.Objects;
 @CacheConfig(cacheNames = "ProductCache")
 public class ProductService {
     private final ProductRepository productRepository;
+    private final ProductBrandService productBrandService;
+    private final ProductMapper productMapper;
 
     @Value("${image.upload.dir}")
     private String uploadDir;
 
     @Cacheable(key = "'allProducts'")
     public List<Product> getAllProducts() {
-        return productRepository.findAll();
+        return productRepository.findAllWithBrands();
+    }
+
+    public List<Product> getProductsByBrandIds(List<Long> brandIds) {
+        if (brandIds != null && !brandIds.isEmpty()) {
+            return productRepository.findByProductBrandIdIn(brandIds);
+        } else {
+            return productRepository.findAll();
+        }
     }
 
     @Cacheable(key = "#id")
@@ -55,19 +67,21 @@ public class ProductService {
         productRepository.deleteById(id);
     }
 
+    @Transactional
+    @CacheEvict(allEntries = true)
     public void saveProductWithImage(ProductDTO productDTO) {
         Product product = new Product();
         product.setName(productDTO.getName());
         product.setDescription(productDTO.getDescription());
         product.setPrice(productDTO.getPrice());
-        product.setBrand(productDTO.getBrand());
+        var productBrand = productBrandService.getProductBrandById(productDTO.getBrandId());
+        product.setProductBrand(productBrand);
         product.setImagePath("");
         productRepository.save(product);
 
         String imagePath = saveFile(productDTO.getImageFile(), product.getId());
         product.setImagePath(imagePath);
 
-        productRepository.save(product);
     }
 
     private String saveFile(MultipartFile file, Long productId) {
@@ -93,6 +107,11 @@ public class ProductService {
             log.error("Error saving file: {}", e.getMessage());
             return null;
         }
+    }
+
+    @Cacheable(key = "'allProductDtos'")
+    public List<ProductDTO> getAllProductsDto() {
+        return productRepository.getAllProductsDto();
     }
 }
 

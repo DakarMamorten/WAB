@@ -3,11 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <title>Product List</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <link th:href="@{/css/bootstrap.min.css}" rel="stylesheet">
 
     <style>
-       .btn {
+        .btn {
             padding: 5px 10px;
             font-size: 14px;
         }
@@ -50,12 +49,13 @@
         <tr th:each="product : ${products}">
             <td th:text="${product.id}"></td>
             <td>
-                <img th:src="@{'/product-images/' + ${product.imagePath}}" alt="Product Image" class="img-thumbnail" style="width: 50px; height: 50px; object-fit: cover;">
+                <img th:src="@{'/product-images/' + ${product.imagePath}}" alt="Product Image" class="img-thumbnail"
+                     style="width: 50px; height: 50px; object-fit: cover;">
             </td>
             <td th:text="${product.name}"></td>
             <td th:text="${product.description}"></td>
             <td th:text="${product.price} + ' PLN'"></td>
-            <td th:text="${product.brand}"></td>
+            <td th:text="${product.brandName}"></td>
             <td>
                 <button type="button" class="btn btn-sm btn-primary" data-bs-toggle="modal"
                         th:attr="data-bs-target=${'#editProductModal' + product.id}">
@@ -94,7 +94,9 @@
                     </div>
                     <div class="mb-3">
                         <label for="brand" class="form-label">Brand</label>
-                        <input type="text" class="form-control" id="brand" name="brand" th:field="*{brand}">
+                        <select id="brand" th:field="*{brandId}">
+                            <option th:each="pb : ${productBrands}" th:value="${pb.getId()}" th:text="${pb.getName()}"></option>
+                        </select>
                     </div>
 
                     <div class="mb-3">
@@ -136,7 +138,7 @@
                     <div class="mb-3">
                         <label for="brandId" class="form-label" th:text="'Input brand : '"></label>
                         <input type="text" class="form-control" id="brandId" name="brand"
-                               th:value="${product.brand}">
+                               th:value="${product.brandName}">
                     </div>
                 </div>
                 <div class="modal-footer">
@@ -166,5 +168,6 @@
         </div>
     </div>
 </div>
+<script th:src="@{/js/bootstrap.min.js}"></script>
 </body>
 </html>

@@ -2,6 +2,7 @@ package com.project.wab.controller;
 
 import com.project.wab.domain.User;
 import com.project.wab.service.CartService;
+import com.project.wab.service.ProductBrandService;
 import com.project.wab.service.ProductService;
 import com.project.wab.utils.WebUtil;
 import jakarta.servlet.http.HttpServletRequest;
@@ -13,7 +14,9 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
+import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
@@ -27,14 +30,18 @@ import java.util.UUID;
 public class UserIndexController {
     private final ProductService productService;
     private final CartService cartService;
+    private final ProductBrandService productBrandService;
 
     @GetMapping("/")
     public String userIndex(@CurrentSecurityContext SecurityContext context,
+                            @RequestParam(required = false) List<Long> brandIds,
                             Model model,
                             HttpServletRequest request,
                             HttpServletResponse response) {
-        var products = productService.getAllProducts();
+        var products = productService.getProductsByBrandIds(brandIds);
+        var productBrands = productBrandService.getAllProductBrand();
         model.addAttribute("products", products);
+        model.addAttribute("productBrands", productBrands);
 
         Object principal = context.getAuthentication().getPrincipal();
         var cartToken = WebUtil.checkToken(request);

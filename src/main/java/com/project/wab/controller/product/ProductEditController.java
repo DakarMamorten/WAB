@@ -24,7 +24,6 @@ public class ProductEditController {
         product.setName(name);
         product.setDescription(description);
         product.setPrice(price);
-        product.setBrand(brand);
         productService.saveProduct(product);
         return "redirect:/product/list";
     }
