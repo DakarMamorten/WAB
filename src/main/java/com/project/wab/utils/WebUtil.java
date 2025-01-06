@@ -11,6 +11,11 @@ import java.util.Arrays;
 public class WebUtil {
 
     public static final int MAX_AGE = 60 * 60 * 24;//24 hours
+    public static final String CART_TOKEN = "cartToken";
+
+    private WebUtil() {
+
+    }
 
     public static String checkToken(HttpServletRequest request) {
         Cookie[] cookies = request.getCookies();
@@ -18,14 +23,14 @@ public class WebUtil {
             return null;
         }
         return Arrays.stream(cookies)
-                .filter(cookie -> "cartToken".equals(cookie.getName()))
+                .filter(cookie -> CART_TOKEN.equals(cookie.getName()))
                 .map(Cookie::getValue)
                 .findFirst()
                 .orElse(null);
     }
 
     public static Cookie populateCookie(String token) {
-        Cookie cookie = new Cookie("cartToken", token);
+        Cookie cookie = new Cookie(CART_TOKEN, token);
         cookie.setHttpOnly(true);
         cookie.setPath("/");
         cookie.setMaxAge(MAX_AGE);
@@ -33,7 +38,8 @@ public class WebUtil {
     }
 
     public static Cookie removeCookie() {
-        Cookie removeCookie = new Cookie("cartToken", "");
+        Cookie removeCookie = new Cookie(CART_TOKEN, "");
+        removeCookie.setPath("/");
         removeCookie.setMaxAge(0);
         return removeCookie;
     }

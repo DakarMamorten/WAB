@@ -43,10 +43,6 @@ public class User implements UserDetails {
     @JoinColumn(name = "role_id")
     private Role role;
 
-    @OneToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
-    @JoinColumn(name = "address_id")
-    private Address address;
-
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return List.of(role);

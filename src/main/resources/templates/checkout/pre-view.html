@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta content="width=device-width, initial-scale=1.0" name="viewport">
+    <title>Checkout Summary</title>
+    <link rel="stylesheet" th:href="@{/css/bootstrap.min.css}">
+</head>
+<body>
+<div th:insert="~{/user_navbar::content}"></div>
+
+<div class="container">
+    <main>
+        <div class="row g-5">
+            <div class="col-md-5 col-lg-4 order-md-last">
+                <h4 class="d-flex justify-content-between align-items-center mb-3">
+                    <span class="text-primary">Your cart</span>
+                    <span class="badge bg-primary rounded-pill" th:text="${totalPrice}"></span>
+                </h4>
+                <ul class="list-group mb-3">
+                    <li class="list-group-item d-flex justify-content-between lh-sm"
+                        th:each="ci : ${cartItems}">
+                        <div>
+                            <h6 class="my-0" th:text="${ci.productName}"></h6>
+                            <small class="text-muted" th:text="${ci.productName}"></small>
+                        </div>
+                        <span class="text-muted" th:text="${ci.total} + ' zł'"></span>
+                    </li>
+                    <li class="list-group-item d-flex justify-content-between">
+                        <span>Total (PLN)</span>
+                        <strong th:text="${cartTotal} + ' zł'"></strong>
+                    </li>
+                </ul>
+            </div>
+            <div class="col-md-7 col-lg-8">
+                <h4 class="mb-3">Billing address</h4>
+                <p>
+                    <strong>First Name:</strong>
+                    <span th:text="${addressDTO.firstName}">John</span>
+                </p>
+                <p>
+                    <strong>Last Name:</strong>
+                    <span th:text="${addressDTO.lastName}">Doe</span>
+                </p>
+                <p>
+                    <strong>Email:</strong>
+                    <span th:text="${addressDTO.email}">john.doe@example.com</span>
+                </p>
+                <p>
+                    <strong>Address 1:</strong>
+                    <span th:text="${addressDTO.address1}">1234 Main St</span>
+                </p>
+                <p th:if="${addressDTO.address2 != null and addressDTO.address2 != ''}">
+                    <strong>Address 2:</strong>
+                    <span th:text="${addressDTO.address2}">Apartment 56</span>
+                </p>
+                <p>
+                    <strong>Phone:</strong>
+                    <span th:text="${addressDTO.phone}">555-123-456</span>
+                </p>
+                <p>
+                    <strong>Postal Code:</strong>
+                    <span th:text="${addressDTO.postalCode}">XX-XXX</span>
+                </p>
+                <p>
+                    <strong>City:</strong>
+                    <span th:text="${addressDTO.city}">Sample City</span>
+                </p>
+
+                <hr class="my-4"/>
+
+                <div class="row">
+                    <div class="col-md-6 border-end">
+                        <h4 class="mb-3">Payment</h4>
+                        <p>
+                            <strong>Payment Method:</strong>
+                            <span th:text="${addressDTO.paymentMethod}">Credit Card</span>
+                        </p>
+                    </div>
+
+                    <div class="col-md-6">
+                        <h4 class="mb-3">Shipping method</h4>
+                        <p>
+                            <strong>Shipping Method:</strong>
+                            <span th:text="${addressDTO.shippingMethod}">UPS</span>
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <form th:action="@{/checkout/pre-view}" th:method="post">
+            <hr class="my-4"/>
+            <input name="addressId" th:value="${addressDTO.id}" type="hidden">
+            <button class="w-100 btn btn-primary btn-lg" type="submit">Proceed to checkout</button>
+        </form>
+    </main>
+</div>
+</body>
+</html>

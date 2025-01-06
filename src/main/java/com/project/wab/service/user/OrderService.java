@@ -1,16 +1,11 @@
 package com.project.wab.service.user;
 
-import com.project.wab.domain.Address;
-import com.project.wab.domain.order.Order;
-import com.project.wab.domain.order.OrderItem;
-import com.project.wab.domain.order.OrderItemId;
-import com.project.wab.domain.order.OrderState;
-import com.project.wab.domain.order.PaymentState;
-import com.project.wab.domain.order.ShipmentState;
+import com.project.wab.domain.order.*;
 import com.project.wab.dto.OrderDTO;
 import com.project.wab.dto.OrderItemDTO;
 import com.project.wab.dto.OrderWithItemsProjection;
 import com.project.wab.repository.OrderRepository;
+import com.project.wab.service.AddressService;
 import com.project.wab.service.CartService;
 import com.project.wab.service.UserService;
 import jakarta.persistence.EntityNotFoundException;
@@ -24,19 +19,39 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
+/**
+ * @author "Vladyslav Paun"
+ */
 @Service
 @RequiredArgsConstructor
 public class OrderService {
     private final OrderRepository orderRepository;
     private final CartService cartService;
     private final UserService userService;
+    private final AddressService addressService;
+
+    private static OrderDTO getOrderDTO(UUID orderId, List<OrderWithItemsProjection> rows) {
+        if (rows.isEmpty()) {
+            throw new EntityNotFoundException("Order not found for id: " + orderId);
+        }
+        var firstRow = rows.getFirst();
+
+        return new OrderDTO(
+                firstRow.orderId(),
+                firstRow.state().toString(),
+                firstRow.paymentState().toString(),
+                firstRow.shipmentState().toString(),
+                firstRow.totalPrice(),
+                new ArrayList<>()
+        );
+    }
 
     @Transactional
-    public Order placeOrder(String cartId, Address address) {
+    public Order placeOrder(String cartId, Long addressId) {
         var order = new Order();
 
         var cart = cartService.findById(cartId);
-
+        var address = addressService.findById(addressId);
         if (cart.getUserId() != null) {
             var user = userService.findById(cart.getUserId());
             order.setUser(user);
@@ -103,21 +118,5 @@ public class OrderService {
         }
 
         return orderDTO;
-    }
-
-    private static OrderDTO getOrderDTO(UUID orderId, List<OrderWithItemsProjection> rows) {
-        if (rows.isEmpty()) {
-            throw new EntityNotFoundException("Order not found for id: " + orderId);
-        }
-        var firstRow = rows.getFirst();
-
-        return new OrderDTO(
-                firstRow.orderId(),
-                firstRow.state().toString(),
-                firstRow.paymentState().toString(),
-                firstRow.shipmentState().toString(),
-                firstRow.totalPrice(),
-                new ArrayList<>()
-        );
     }
 }

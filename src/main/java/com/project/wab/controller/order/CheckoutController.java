@@ -1,7 +1,9 @@
 package com.project.wab.controller.order;
 
 import com.project.wab.dto.AddressDTO;
-import com.project.wab.mapper.AddressMapper;
+import com.project.wab.service.AddressService;
+import com.project.wab.service.CheckoutService;
+import com.project.wab.service.ReferenceBookService;
 import com.project.wab.service.user.OrderService;
 import com.project.wab.utils.WebUtil;
 import jakarta.servlet.http.HttpServletRequest;
@@ -28,41 +30,59 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class CheckoutController {
 
-    private final AddressMapper addressMapper;
     private final OrderService orderService;
+    private final ReferenceBookService referenceBookService;
+    private final AddressService addressService;
+    private final CheckoutService checkoutService;
 
     @GetMapping
-    public String showCheckoutForm(Model model) {
+    public String showCheckoutForm(Model model, HttpServletRequest request) {
         model.addAttribute("addressDTO", new AddressDTO());
+        var token = WebUtil.checkToken(request);
+        referenceBookService.getReferenceBookForCheckout(model, token);
         return "/checkout/form";
     }
 
     @PostMapping
     public String processCheckout(@ModelAttribute @Valid AddressDTO addressDTO,
                                   BindingResult bindingResult,
-                                  HttpServletRequest request,
-                                  HttpServletResponse response,
                                   RedirectAttributes redirectAttributes) {
-        var cartToken = WebUtil.checkToken(request);
         if (bindingResult.hasErrors()) {
             return "/checkout/form";
         }
+        var address = addressService.save(addressDTO);
+        redirectAttributes.addFlashAttribute("addressId", address.getId());
+        return "redirect:/checkout/pre-view";
 
-        var address = addressMapper.addressDtoToAddress(addressDTO);
-        var order = orderService.placeOrder(cartToken, address);
-        response.addCookie(WebUtil.removeCookie());
-        redirectAttributes.addFlashAttribute("orderId", order.getId().toString());
+    }
+
+    @GetMapping("/pre-view")
+    public String showPreViewForm(Model model, HttpServletRequest request) {
+        var cartId = WebUtil.checkToken(request);
+        checkoutService.preView(cartId, model);
+        return "/checkout/pre-view";
+    }
+
+    @PostMapping("/pre-view")
+    public String processPreView(Long addressId,
+                                 HttpServletRequest request,
+                                 RedirectAttributes redirectAttributes) {
+        var cartToken = WebUtil.checkToken(request);
+        var order = orderService.placeOrder(cartToken, addressId);
+        redirectAttributes.addAttribute("orderId", order.getId().toString());
 
         return "redirect:/checkout/success";
     }
 
     @GetMapping("/success")
-    public String showSuccessPage(Model model) {
-        var orderId = (String) model.getAttribute("orderId");
+    public String showSuccessPage(Model model, HttpServletRequest request, HttpServletResponse response) {
+        String orderId = request.getParameter("orderId");
         var dorderDto = orderService.getOderViewById(UUID.fromString(Objects.requireNonNull(orderId)));
         model.addAttribute("order", dorderDto);
+
+        response.addCookie(WebUtil.removeCookie());
+
         return "/checkout/success";
     }
-
 
 }

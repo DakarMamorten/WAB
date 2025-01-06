@@ -21,9 +21,7 @@ create table if not exists users
     address_id         bigint,
     constraint pk_user primary key (id),
     constraint uq_user unique (email),
-    constraint fk_user1 foreign key (role_id) references role (id),
-    constraint fk_user2 foreign key (address_id) references address (id)
+    constraint fk_user1 foreign key (role_id) references role (id)
 );
 
 create index idx_users1 on users (role_id);
-create index idx_users2 on users (address_id);

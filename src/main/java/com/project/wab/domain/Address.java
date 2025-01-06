@@ -7,6 +7,9 @@ import jakarta.validation.constraints.Pattern;
 import lombok.Getter;
 import lombok.Setter;
 
+/**
+ * @author "Vladyslav Paun"
+ */
 @Entity
 @Table(name = "address")
 @Getter
@@ -24,16 +27,22 @@ public class Address {
     @Column(name = "last_name", nullable = false)
     private String lastName;
 
-    @NotBlank(message = "Street name is mandatory")
-    @Column(name = "street_name", nullable = false)
-    private String streetName;
+    @Email(message = "Email should be valid")
+    @NotBlank(message = "Email is mandatory")
+    @Column(name = "email", nullable = false, unique = true)
+    private String email;
 
-    @NotBlank(message = "House is mandatory")
-    @Column(name = "house", nullable = false)
-    private String house;
+    @NotBlank(message = "Address1 is mandatory")
+    @Column(name = "address1", nullable = false)
+    private String address1;
 
-    @Column(name = "flat")
-    private String flat;
+    @Column(name = "address2")
+    private String address2;
+
+    @NotBlank(message = "Phone number is mandatory")
+    @Pattern(regexp = "\\d+", message = "Phone number must contain only digits")
+    @Column(name = "phone", nullable = false)
+    private String phone;
 
     @NotBlank(message = "Postal code is mandatory")
     @Pattern(regexp = "\\d{2}-\\d{3}", message = "Postal code must be 5 digits")
@@ -44,15 +53,12 @@ public class Address {
     @Column(name = "city", nullable = false)
     private String city;
 
-    @NotBlank(message = "Phone number is mandatory")
-    @Pattern(regexp = "\\d+", message = "Phone number must contain only digits")
-    @Column(name = "phone", nullable = false)
-    private String phone;
+    @ManyToOne
+    @JoinColumn(name = "payment_method_id")
+    private PaymentMethod paymentMethod;
 
-    @Email(message = "Email should be valid")
-    @NotBlank(message = "Email is mandatory")
-    @Column(name = "email", nullable = false, unique = true)
-    private String email;
-
+    @ManyToOne
+    @JoinColumn(name = "shipment_method_id")
+    private ShipmentMethod shipmentMethod;
 }
 
