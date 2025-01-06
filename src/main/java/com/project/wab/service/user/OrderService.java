@@ -4,6 +4,7 @@ import com.project.wab.domain.order.*;
 import com.project.wab.dto.OrderDTO;
 import com.project.wab.dto.OrderItemDTO;
 import com.project.wab.dto.OrderWithItemsProjection;
+import com.project.wab.exception.OrderNotFoundException;
 import com.project.wab.repository.OrderRepository;
 import com.project.wab.service.AddressService;
 import com.project.wab.service.CartService;
@@ -118,5 +119,16 @@ public class OrderService {
         }
 
         return orderDTO;
+    }
+
+    public List<Order> getAllOrders() {
+        return orderRepository.findAll();
+    }
+
+    public void updatePaymentStatus(UUID orderId, PaymentState status) {
+        var order = orderRepository.findById(orderId)
+                .orElseThrow(() -> new OrderNotFoundException("Order with ID " + orderId + " not found"));
+        order.setPaymentState(status);
+        orderRepository.save(order);
     }
 }

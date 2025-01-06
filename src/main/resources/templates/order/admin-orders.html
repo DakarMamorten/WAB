@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Manage Orders</title>
+    <link rel="stylesheet" th:href="@{/css/bootstrap.min.css}">
+</head>
+<body>
+<div th:insert="~{/navbar::content}"></div>
+<div class="container">
+    <h2 class="mt-4">Manage Orders</h2>
+    <table class="table table-striped">
+        <thead>
+        <tr>
+            <th>ID</th>
+            <th>User Name</th>
+            <th>Order Date </th>
+            <th>Total price</th>
+            <th>Payment State</th>
+            <th>Shipment State</th>
+            <th>State</th>
+            <th>Actions</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="order : ${orders}">
+            <td th:text="${order.id}">Order ID</td>
+
+            <td th:text="${order.userEmail}">User Name</td>
+
+            <td th:text="${order.orderDate}">Order Date</td>
+
+            <td th:text="${order.totalPrice}">Total price</td>
+
+            <td th:text="${order.paymentState}">Payment State</td>
+
+            <td th:text="${order.shipmentState}">Shipment State</td>
+
+            <td th:text="${order.state}">State</td>
+
+            <td>
+                <form th:action="@{/admin/update}" method="post">
+                    <input type="hidden" name="orderId" th:value="${order.id}">
+                    <button class="btn btn-primary btn-sm" type="submit">Mark as Paid</button>
+                </form>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+</body>
+</html>
