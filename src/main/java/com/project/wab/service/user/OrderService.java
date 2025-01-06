@@ -125,10 +125,17 @@ public class OrderService {
         return orderRepository.findAll();
     }
 
-    public void updatePaymentStatus(UUID orderId, PaymentState status) {
+    public void updatePaymentStatus(UUID orderId, String status) {
         var order = orderRepository.findById(orderId)
                 .orElseThrow(() -> new OrderNotFoundException("Order with ID " + orderId + " not found"));
-        order.setPaymentState(status);
+        order.setPaymentState(PaymentState.valueOf(status));
+        orderRepository.save(order);
+    }
+
+    public void updateShipmentStatus(UUID orderId, String status) {
+        var order = orderRepository.findById(orderId)
+                .orElseThrow(() -> new OrderNotFoundException("Order with ID " + orderId + " not found"));
+        order.setShipmentState(ShipmentState.valueOf(status));
         orderRepository.save(order);
     }
 }

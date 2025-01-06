@@ -2,6 +2,7 @@ package com.project.wab.controller.order;
 
 import com.project.wab.domain.order.Order;
 import com.project.wab.domain.order.PaymentState;
+import com.project.wab.domain.order.ShipmentState;
 import com.project.wab.service.user.OrderService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
@@ -28,12 +29,21 @@ public class AdminOrderController {
     public String getAllOrders(Model model) {
         List<Order> orders = orderService.getAllOrders();
         model.addAttribute("orders", orders);
+
+        model.addAttribute("shipmentStates", ShipmentState.values());
+        model.addAttribute("paymentStates", PaymentState.values());
         return "/order/admin-orders";
     }
 
-    @PostMapping("/update")
-    public String updateOrderStatus(UUID orderId) {
-        orderService.updatePaymentStatus(orderId, PaymentState.PAID);
+    @PostMapping("/update-payment")
+    public String updateOrderStatus(UUID orderId, String newStatus) {
+        orderService.updatePaymentStatus(orderId, newStatus);
+        return "redirect:/admin/orders";
+    }
+
+    @PostMapping("/update-shipment")
+    public String updateShipmentStatus(UUID orderId, String newStatus) {
+        orderService.updateShipmentStatus(orderId, newStatus);
         return "redirect:/admin/orders";
     }
 }
