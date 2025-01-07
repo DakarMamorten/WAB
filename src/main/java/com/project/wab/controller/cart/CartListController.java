@@ -40,6 +40,7 @@ public class CartListController {
             model.addAttribute("cartId", cartId);
             model.addAttribute("cartItems", cartItems);
             model.addAttribute("totalPrice", CartHelper.calculateCartTotal(cartItems));
+            model.addAttribute("cartSize",cartItems.size());
             return "cart/list";
 
         } catch (IllegalArgumentException e) {

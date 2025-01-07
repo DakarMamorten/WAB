@@ -24,8 +24,7 @@ public class AdminOrderController {
 
     private final OrderService orderService;
 
-    @GetMapping
-    @RequestMapping("/orders")
+    @GetMapping("/orders")
     public String getAllOrders(Model model) {
         List<Order> orders = orderService.getAllOrders();
         model.addAttribute("orders", orders);
