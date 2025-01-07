@@ -38,9 +38,10 @@ public class WebUtil {
     }
 
     public static Cookie removeCookie() {
-        Cookie removeCookie = new Cookie(CART_TOKEN, "");
-        removeCookie.setPath("/");
-        removeCookie.setMaxAge(0);
-        return removeCookie;
+        Cookie cookie = new Cookie(CART_TOKEN, null);
+        cookie.setPath("/");
+        cookie.setMaxAge(0);
+        cookie.setHttpOnly(true);
+        return cookie;
     }
 }

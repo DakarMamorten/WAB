@@ -1,6 +1,7 @@
 package com.project.wab.config;
 
 import com.project.wab.service.user.AdminDetailsService;
+import com.project.wab.utils.WebUtil;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -43,6 +44,18 @@ public class SecurityConfig {
                         .requestMatchers("/products").permitAll()
                         .requestMatchers("/orders").authenticated()
                         .anyRequest().authenticated()
+                )
+                .logout(logout -> logout
+                        .logoutUrl("/logout")
+                        .logoutSuccessUrl("/")
+                        .logoutSuccessHandler((request, response, authentication) -> {
+                            if (request.getSession() != null) {
+                                request.getSession().invalidate();
+                            }
+                            response.addCookie(WebUtil.removeCookie());
+                            response.sendRedirect("/");
+                        })
+                        .permitAll()
                 )
                 .formLogin(form -> form
                         .loginPage("/login")
