@@ -1,7 +1,6 @@
 package com.project.wab.controller.product;
 
 import com.project.wab.dto.ProductDTO;
-import com.project.wab.mapper.ProductMapper;
 import com.project.wab.service.ProductBrandService;
 import com.project.wab.service.ProductService;
 import lombok.RequiredArgsConstructor;
