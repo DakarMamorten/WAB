@@ -1,29 +1,34 @@
-<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <th:block th:fragment="content">
-  <link rel="stylesheet" th:href="styles.css">
+    <link rel="stylesheet" th:href="styles.css">
 
-  <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
-    <a class="navbar-brand" th:href="@{/}">MYUN Store</a>
-    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false"
-            aria-label="Toggle navigation">
-      <span class="navbar-toggler-icon"></span>
-    </button>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+        <a class="navbar-brand" th:href="@{/}">MYUN Store</a>
+        <button aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation" class="navbar-toggler"
+                data-target="#navbarSupportedContent" data-toggle="collapse"
+                type="button">
+            <span class="navbar-toggler-icon"></span>
+        </button>
 
-    <div class="collapse navbar-collapse" id="navbarSupportedContent">
-      <ul class="navbar-nav mr-auto">
-        <li class="nav-item active">
-          <a class="nav-link" th:href="@{/product/list}">Products</a>
-        </li>
-        <li class="nav-item active">
-          <a class="nav-link" th:href="@{/cart/list}">Cart</a>
-        </li>
-        <li class="nav-item active">
-          <a class="nav-link" th:href="@{/admin/orders}">Manage Orders</a>
-        </li>
-        <li class="nav-item active">
-          <a class="nav-link" th:href="@{/user/list}">User</a>
-        </li>
-      </ul>
-    </div>
-  </nav></th:block>
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav mr-auto">
+                <li class="nav-item active">
+                    <a class="nav-link" th:href="@{/product/list}">Products</a>
+                </li>
+                <li class="nav-item active">
+                    <a class="nav-link" th:href="@{/cart/list}">Cart</a>
+                </li>
+                <li class="nav-item active">
+                    <a class="nav-link" th:href="@{/admin/orders}">Manage Orders</a>
+                </li>
+                <li class="nav-item active">
+                    <a class="nav-link" th:href="@{/user/list}">User</a>
+                </li>
+                <li class="nav-item active">
+                    <a class="nav-link" th:href="@{/admin/reports}">Reports</a>
+                </li>
+            </ul>
+        </div>
+    </nav>
+</th:block>
 </html>

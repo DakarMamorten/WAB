@@ -3,6 +3,8 @@ package com.project.wab.controller.order;
 import com.project.wab.domain.order.Order;
 import com.project.wab.domain.order.PaymentState;
 import com.project.wab.domain.order.ShipmentState;
+import com.project.wab.dto.RevenueReportDTO;
+import com.project.wab.dto.TopProductDTO;
 import com.project.wab.service.user.OrderService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
@@ -44,5 +46,15 @@ public class AdminOrderController {
     public String updateShipmentStatus(UUID orderId, String newStatus) {
         orderService.updateShipmentStatus(orderId, newStatus);
         return "redirect:/admin/orders";
+    }
+
+    @GetMapping("/reports")
+    public String getReports(Model model) {
+        List<TopProductDTO> topProducts = orderService.getTopSellingProducts(5);
+        RevenueReportDTO revenueReport = orderService.getRevenueReportForPeriod();
+
+        model.addAttribute("topProducts", topProducts);
+        model.addAttribute("revenueReport", revenueReport);
+        return "/reports/report";
     }
 }

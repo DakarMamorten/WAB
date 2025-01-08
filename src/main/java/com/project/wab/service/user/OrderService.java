@@ -1,9 +1,7 @@
 package com.project.wab.service.user;
 
 import com.project.wab.domain.order.*;
-import com.project.wab.dto.OrderDTO;
-import com.project.wab.dto.OrderItemDTO;
-import com.project.wab.dto.OrderWithItemsProjection;
+import com.project.wab.dto.*;
 import com.project.wab.exception.OrderNotFoundException;
 import com.project.wab.repository.OrderRepository;
 import com.project.wab.service.AddressService;
@@ -11,6 +9,7 @@ import com.project.wab.service.CartService;
 import com.project.wab.service.UserService;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -138,4 +137,19 @@ public class OrderService {
         order.setShipmentState(ShipmentState.valueOf(status));
         orderRepository.save(order);
     }
+
+    public List<TopProductDTO> getTopSellingProducts(int limit) {
+        return orderRepository.findTopSellingProducts(PageRequest.of(0, limit));
+    }
+
+    public RevenueReportDTO getRevenueReportForPeriod() {
+        LocalDateTime startDate = LocalDateTime.now().minusDays(30);
+        LocalDateTime endDate = LocalDateTime.now();
+
+        BigDecimal totalRevenue = orderRepository.calculateRevenueBetweenDates(startDate, endDate);
+        long totalOrders = orderRepository.countOrdersBetweenDates(startDate, endDate);
+
+        return new RevenueReportDTO(totalRevenue, totalOrders);
+    }
+
 }
