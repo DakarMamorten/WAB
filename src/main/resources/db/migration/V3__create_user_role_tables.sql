@@ -20,7 +20,6 @@ create table if not exists users
     role_id            bigint,
     address_id         bigint,
     constraint pk_user primary key (id),
-    constraint uq_user unique (email),
     constraint fk_user1 foreign key (role_id) references role (id)
 );
 

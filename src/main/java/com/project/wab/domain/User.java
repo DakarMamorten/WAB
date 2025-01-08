@@ -30,7 +30,7 @@ public class User implements UserDetails {
     @Column(name = "last_name", nullable = false)
     private String lastName;
     private String password;
-    @Column(unique = true, nullable = false, updatable = false)
+    @Column(nullable = false, updatable = false)
     private String email;
     private LocalDateTime lockTime;
     @Column(nullable = false)
