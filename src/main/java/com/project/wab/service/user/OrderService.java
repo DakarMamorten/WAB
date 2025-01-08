@@ -9,7 +9,7 @@ import com.project.wab.service.CartService;
 import com.project.wab.service.UserService;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -138,18 +138,14 @@ public class OrderService {
         orderRepository.save(order);
     }
 
-    public List<TopProductDTO> getTopSellingProducts(int limit) {
-        return orderRepository.findTopSellingProducts(PageRequest.of(0, limit));
-    }
-
-    public RevenueReportDTO getRevenueReportForPeriod() {
-        LocalDateTime startDate = LocalDateTime.now().minusDays(30);
-        LocalDateTime endDate = LocalDateTime.now();
-
+    public RevenueReportDTO getRevenueReportForPeriod(LocalDateTime startDate, LocalDateTime endDate) {
         BigDecimal totalRevenue = orderRepository.calculateRevenueBetweenDates(startDate, endDate);
         long totalOrders = orderRepository.countOrdersBetweenDates(startDate, endDate);
 
         return new RevenueReportDTO(totalRevenue, totalOrders);
     }
 
+    public List<TopProductDTO> getTopProducts(Pageable pageable) {
+        return orderRepository.findTopSellingProducts(pageable);
+    }
 }

@@ -7,12 +7,15 @@ import com.project.wab.dto.RevenueReportDTO;
 import com.project.wab.dto.TopProductDTO;
 import com.project.wab.service.user.OrderService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
 
@@ -49,12 +52,16 @@ public class AdminOrderController {
     }
 
     @GetMapping("/reports")
-    public String getReports(Model model) {
-        List<TopProductDTO> topProducts = orderService.getTopSellingProducts(5);
-        RevenueReportDTO revenueReport = orderService.getRevenueReportForPeriod();
+    public String getRevenueReport(@RequestParam(value = "startDate", required = false) LocalDateTime startDate,
+                                   @RequestParam(value = "endDate", required = false) LocalDateTime endDate,
+                                   Model model) {
+        List<TopProductDTO> topProducts = orderService.getTopProducts(PageRequest.of(0, 5));
+        RevenueReportDTO report = orderService.getRevenueReportForPeriod(startDate, endDate);
 
         model.addAttribute("topProducts", topProducts);
-        model.addAttribute("revenueReport", revenueReport);
+        model.addAttribute("report", report);
+        model.addAttribute("startDate", startDate);
+        model.addAttribute("endDate", endDate);
         return "/reports/report";
     }
 }
