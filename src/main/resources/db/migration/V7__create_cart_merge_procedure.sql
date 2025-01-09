@@ -11,10 +11,18 @@ declare
     l_target_cart_id uuid;
     l_source_cart_id uuid = p_source_cart_id;
 begin
+    if p_user_id is not null then
+        update orders
+        set user_id = p_user_id
+        where user_email = (select email from users where id = p_user_id)
+          and user_id is null;
+    end if;
+
     select c.id
     into l_target_cart_id
     from cart as c
     where c.user_id = p_user_id;
+
     if p_user_id is not null then
         if l_target_cart_id is null and l_source_cart_id is null then
             p_total = 0;
@@ -52,7 +60,7 @@ begin
         return;
     end if;
 
-    -- merge data from source cart into target cart in the cart_item table
+    --merge data from source cart into target cart in the cart_item table
     merge into cart_item ci
     using (select l_target_cart_id  as cart_id,
                   cir.product_id,
@@ -68,7 +76,6 @@ begin
         values (s.cart_id, s.product_id, s.quantity);
 
     -- delete the source cart items from the cart_item table
-
     delete
     from cart_item
     where cart_id = l_source_cart_id
