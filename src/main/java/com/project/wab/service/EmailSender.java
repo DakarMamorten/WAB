@@ -35,9 +35,9 @@ public class EmailSender {
         com.sendgrid.helpers.mail.objects.Email from = new com.sendgrid.helpers.mail.objects.Email(ADMIN_EMAIL);
         String subject = email.getSubject();
         com.sendgrid.helpers.mail.objects.Email to = new com.sendgrid.helpers.mail.objects.Email(email.getRecipientEmail());
-        final Map<String, String> templateData = email.getTemplateData();
+        final Map<String, Object> templateData = email.getTemplateData();
         final Context context = new Context(Locale.of("UTF-16"));
-        for (Map.Entry<String, String> entry : templateData.entrySet()) {
+        for (Map.Entry<String, Object> entry : templateData.entrySet()) {
             context.setVariable(entry.getKey(), entry.getValue());
         }
         final String htmlContent = this.htmlTemplateEngine.process(email.getTemplate(), context);

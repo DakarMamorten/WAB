@@ -1,8 +1,10 @@
 package com.project.wab.controller.order;
 
 import com.project.wab.dto.AddressDTO;
+import com.project.wab.dto.Email;
 import com.project.wab.service.AddressService;
 import com.project.wab.service.CheckoutService;
+import com.project.wab.service.EmailSender;
 import com.project.wab.service.ReferenceBookService;
 import com.project.wab.service.user.OrderService;
 import com.project.wab.utils.WebUtil;
@@ -34,6 +36,7 @@ public class CheckoutController {
     private final ReferenceBookService referenceBookService;
     private final AddressService addressService;
     private final CheckoutService checkoutService;
+    private final EmailSender emailSender;
 
     @GetMapping
     public String showCheckoutForm(Model model, HttpServletRequest request) {
@@ -63,23 +66,19 @@ public class CheckoutController {
         return "/checkout/pre-view";
     }
 
-    @PostMapping("/pre-view")
-    public String processPreView(Long addressId,
-                                 HttpServletRequest request,
-                                 RedirectAttributes redirectAttributes) {
-        var cartToken = WebUtil.checkToken(request);
-        var order = orderService.placeOrder(cartToken, addressId);
-        redirectAttributes.addAttribute("orderId", order.getId().toString());
-
-        return "redirect:/checkout/success";
-    }
-
     @GetMapping("/success")
     public String showSuccessPage(Model model, HttpServletRequest request, HttpServletResponse response) {
         String orderId = request.getParameter("orderId");
-        var dorderDto = orderService.getOderViewById(UUID.fromString(Objects.requireNonNull(orderId)));
-        model.addAttribute("order", dorderDto);
+        var orderDto = orderService.getOderViewById(UUID.fromString(Objects.requireNonNull(orderId)));
+        model.addAttribute("order", orderDto);
 
+        var email = new Email();
+        email.setRecipientEmail(orderDto.getUserEmail());
+        email.setTemplate("/email/order-success-template");
+        email.getTemplateData().put("order", orderDto);
+        email.setSubject("Order details");
+
+        emailSender.send(email);
         response.addCookie(WebUtil.removeCookie());
 
         return "/checkout/success";

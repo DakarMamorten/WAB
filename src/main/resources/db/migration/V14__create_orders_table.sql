@@ -9,6 +9,7 @@ create table if not exists orders
     state          varchar(50)    not null,
     user_id        bigint,
     address_id     bigint         not null,
+    transaction_id varchar(100),
     constraint pk_order primary key (id),
     constraint fk_order1 foreign key (user_id) references users (id) on delete set null,
     constraint fk_order2 foreign key (address_id) references address (id) on delete cascade

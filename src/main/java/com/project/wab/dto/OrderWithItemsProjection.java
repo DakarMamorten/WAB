@@ -11,6 +11,7 @@ import java.math.BigDecimal;
  */
 public record OrderWithItemsProjection(
         String orderId,
+        String userEmail,
         OrderState state,
         PaymentState paymentState,
         ShipmentState shipmentState,

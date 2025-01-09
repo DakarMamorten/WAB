@@ -24,6 +24,7 @@ public interface OrderRepository extends JpaRepository<Order, UUID> {
     @Query("""
             SELECT new com.project.wab.dto.OrderWithItemsProjection(
                 CONCAT('', o.id),
+                o.userEmail,
                 o.state,
                 o.paymentState,
                 o.shipmentState,

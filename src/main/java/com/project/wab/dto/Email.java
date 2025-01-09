@@ -16,12 +16,12 @@ public class Email implements Serializable {
     private String recipientEmail;
     private String subject;
     private String template;
-    private Map<String, String> templateData = new HashMap<>();
+    private Map<String, Object> templateData = new HashMap<>();
 
     public Email(final String recipientEmail,
                  final String subject,
                  final String template,
-                 final Map<String, String> templateData) {
+                 final Map<String, Object> templateData) {
         this.recipientEmail = recipientEmail;
         this.subject = subject;
         this.template = template;

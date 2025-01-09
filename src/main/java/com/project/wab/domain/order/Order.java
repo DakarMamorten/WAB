@@ -47,6 +47,9 @@ public class Order {
     @Column(name = "state", nullable = false)
     private OrderState state;
 
+    @Column(name = "transaction_id")
+    private String transactionId;
+
     @ManyToOne
     @JoinColumn(name = "user_id")
     private User user;

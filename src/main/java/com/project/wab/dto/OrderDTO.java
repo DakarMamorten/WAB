@@ -15,6 +15,7 @@ import java.util.List;
 @NoArgsConstructor
 public class OrderDTO {
     private String id;
+    private String userEmail;
     private String state;
     private String paymentState;
     private String shipmentState;

@@ -12,7 +12,6 @@ create table if not exists address
     payment_method_id  bigint       not null,
     shipment_method_id bigint       not null,
     constraint pk_address primary key (id),
-    constraint uq_address unique (email),
     constraint fk_address1 foreign key (payment_method_id) references payment_method (id),
     constraint fk_address2 foreign key (shipment_method_id) references shipment_method (id)
 );

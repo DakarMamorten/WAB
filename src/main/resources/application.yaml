@@ -24,3 +24,7 @@ image:
 lock:
   time:
     duration: 5 #Time in minutes
+braintree:
+  merchantId: "${BRAINTREE_MERCHANT_ID}"
+  publicKey: "${BRAINTREE_PUBLIC_KEY}"
+  privateKey: "${BRAINTREE_PRIVATE_KEY}"

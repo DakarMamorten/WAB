@@ -1,7 +1,16 @@
 package com.project.wab.service.user;
 
-import com.project.wab.domain.order.*;
-import com.project.wab.dto.*;
+import com.project.wab.domain.order.Order;
+import com.project.wab.domain.order.OrderItem;
+import com.project.wab.domain.order.OrderItemId;
+import com.project.wab.domain.order.OrderState;
+import com.project.wab.domain.order.PaymentState;
+import com.project.wab.domain.order.ShipmentState;
+import com.project.wab.dto.OrderDTO;
+import com.project.wab.dto.OrderItemDTO;
+import com.project.wab.dto.OrderWithItemsProjection;
+import com.project.wab.dto.RevenueReportDTO;
+import com.project.wab.dto.TopProductDTO;
 import com.project.wab.exception.OrderNotFoundException;
 import com.project.wab.repository.OrderRepository;
 import com.project.wab.service.AddressService;
@@ -38,6 +47,7 @@ public class OrderService {
 
         return new OrderDTO(
                 firstRow.orderId(),
+                firstRow.userEmail(),
                 firstRow.state().toString(),
                 firstRow.paymentState().toString(),
                 firstRow.shipmentState().toString(),
@@ -124,10 +134,10 @@ public class OrderService {
         return orderRepository.findAll();
     }
 
-    public void updatePaymentStatus(UUID orderId, String status) {
+    public void updatePaymentStatus(UUID orderId, PaymentState status) {
         var order = orderRepository.findById(orderId)
                 .orElseThrow(() -> new OrderNotFoundException("Order with ID " + orderId + " not found"));
-        order.setPaymentState(PaymentState.valueOf(status));
+        order.setPaymentState(status);
         orderRepository.save(order);
     }
 
@@ -136,6 +146,13 @@ public class OrderService {
                 .orElseThrow(() -> new OrderNotFoundException("Order with ID " + orderId + " not found"));
         order.setShipmentState(ShipmentState.valueOf(status));
         orderRepository.save(order);
+    }
+
+    @Transactional
+    public void updateTransactionId(UUID orderId, String transactionId) {
+        orderRepository.findById(orderId).ifPresent(
+                order -> order.setTransactionId(transactionId)
+        );
     }
 
     public RevenueReportDTO getRevenueReportForPeriod(LocalDateTime startDate, LocalDateTime endDate) {

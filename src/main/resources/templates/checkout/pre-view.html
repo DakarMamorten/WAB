@@ -88,12 +88,60 @@
                 </div>
             </div>
         </div>
-        <form th:action="@{/checkout/pre-view}" th:method="post">
+        <form id="payment-form" th:action="@{/payment}" th:method="post">
+            <!-- your addressId -->
+            <input type="hidden" name="addressId" th:value="${addressDTO.id}"/>
+            <!-- we will populate this later with the Braintree nonce -->
+            <input type="hidden" name="nonce" id="nonce"/>
+
             <hr class="my-4"/>
-            <input name="addressId" th:value="${addressDTO.id}" type="hidden">
-            <button class="w-100 btn btn-primary btn-lg" type="submit">Proceed to checkout</button>
+            <div id="dropin-container"></div>
+
+            <button id="submit-button" class="w-100 btn btn-primary btn-lg" type="button">
+                Proceed to pay
+            </button>
         </form>
+
+        <script>
+            const submitButton = document.querySelector('#submit-button');
+            const paymentForm = document.querySelector('#payment-form');
+            const nonceField = document.querySelector('#nonce');
+
+            // 1. Fetch the Braintree client token from your server
+            fetch('/client-token')
+                .then(response => response.text())
+                .then(clientToken => {
+                    // 2. Create the Drop-In UI
+                    braintree.dropin.create({
+                        authorization: clientToken,
+                        container: '#dropin-container'
+                    }, function (createErr, instance) {
+                        if (createErr) {
+                            console.error('Drop-in creation error:', createErr);
+                            return;
+                        }
+
+                        // 3. Handle button click -> request payment method
+                        submitButton.addEventListener('click', function () {
+                            instance.requestPaymentMethod(function (err, payload) {
+                                if (err) {
+                                    console.error('Request payment method error:', err);
+                                    return;
+                                }
+                                // 4. Put the token (nonce) into our hidden input
+                                nonceField.value = payload.nonce;
+
+                                // 5. Submit the form to the controller with addressId & nonce
+                                paymentForm.submit();
+                            });
+                        });
+                    });
+                })
+                .catch(error => console.error('Error fetching token:', error));
+        </script>
+
     </main>
 </div>
+<script src="https://js.braintreegateway.com/web/dropin/1.43.0/js/dropin.min.js"></script>
 </body>
 </html>

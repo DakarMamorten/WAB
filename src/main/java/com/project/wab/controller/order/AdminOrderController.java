@@ -41,7 +41,7 @@ public class AdminOrderController {
 
     @PostMapping("/update-payment")
     public String updateOrderStatus(UUID orderId, String newStatus) {
-        orderService.updatePaymentStatus(orderId, newStatus);
+        orderService.updatePaymentStatus(orderId, PaymentState.valueOf(newStatus));
         return "redirect:/admin/orders";
     }
 
