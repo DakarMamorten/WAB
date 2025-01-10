@@ -38,6 +38,7 @@ public class OrderListController {
             return "redirect:/";
         } else {
             var currentUser = (User) context.getAuthentication().getPrincipal();
+            orderService.bindOrdersToUser(currentUser.getEmail(), currentUser.getId());
             var ordersByUserID = orderService.findOrdersByUserID(currentUser.getId());
             model.addAttribute("user_orders", ordersByUserID);
             var cartToken = WebUtil.checkToken(request);

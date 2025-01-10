@@ -1,16 +1,7 @@
 package com.project.wab.service.user;
 
-import com.project.wab.domain.order.Order;
-import com.project.wab.domain.order.OrderItem;
-import com.project.wab.domain.order.OrderItemId;
-import com.project.wab.domain.order.OrderState;
-import com.project.wab.domain.order.PaymentState;
-import com.project.wab.domain.order.ShipmentState;
-import com.project.wab.dto.OrderDTO;
-import com.project.wab.dto.OrderItemDTO;
-import com.project.wab.dto.OrderWithItemsProjection;
-import com.project.wab.dto.RevenueReportDTO;
-import com.project.wab.dto.TopProductDTO;
+import com.project.wab.domain.order.*;
+import com.project.wab.dto.*;
 import com.project.wab.exception.OrderNotFoundException;
 import com.project.wab.repository.OrderRepository;
 import com.project.wab.service.AddressService;
@@ -165,4 +156,12 @@ public class OrderService {
     public List<TopProductDTO> getTopProducts(Pageable pageable) {
         return orderRepository.findTopSellingProducts(pageable);
     }
+
+    @Transactional
+    public void bindOrdersToUser(String email, Long userId) {
+        var user = userService.findById(userId);
+
+        orderRepository.bindOrdersToUser(user.getId(), email);
+    }
+
 }

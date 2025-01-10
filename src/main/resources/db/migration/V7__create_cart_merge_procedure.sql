@@ -11,13 +11,6 @@ declare
     l_target_cart_id uuid;
     l_source_cart_id uuid = p_source_cart_id;
 begin
-    if p_user_id is not null then
-        update orders
-        set user_id = p_user_id
-        where user_email = (select email from users where id = p_user_id)
-          and user_id is null;
-    end if;
-
     select c.id
     into l_target_cart_id
     from cart as c
