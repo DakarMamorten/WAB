@@ -14,12 +14,12 @@ import java.math.BigDecimal;
  */
 @Controller
 @RequiredArgsConstructor
-@RequestMapping("/product")
+@RequestMapping("/admin")
 public class ProductEditController {
     private final ProductService productService;
 
-    @PostMapping("/edit")
-    public String edit(final Long id, final String name, final String description, final BigDecimal price, final String brand) {
+    @PostMapping("/product/edit")
+    public String edit(final Long id, final String name, final String description, final BigDecimal price) {
         Product product = productService.getProductById(id);
         product.setName(name);
         product.setDescription(description);

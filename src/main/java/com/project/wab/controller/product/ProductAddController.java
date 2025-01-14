@@ -16,19 +16,19 @@ import org.springframework.web.bind.annotation.RequestMapping;
  */
 
 @Controller
-@RequestMapping("/product")
+@RequestMapping("/admin")
 @RequiredArgsConstructor
 public class ProductAddController {
 
     private final ProductService productService;
 
-    @GetMapping("/add")
+    @GetMapping("/product/add")
     public String showAddProductForm(Model model) {
         model.addAttribute("productDTO", new ProductDTO());
         return "product/list";
     }
 
-    @PostMapping("/add")
+    @PostMapping("/product/add")
     public String addProduct(@ModelAttribute ProductDTO productDTO) {
         productService.saveProductWithImage(productDTO);
         return "redirect:/product/list";

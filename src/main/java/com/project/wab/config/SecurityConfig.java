@@ -13,7 +13,6 @@ import org.springframework.security.config.annotation.web.configurers.AbstractHt
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
-import org.springframework.security.web.authentication.SavedRequestAwareAuthenticationSuccessHandler;
 
 import static org.springframework.security.config.Customizer.withDefaults;
 
@@ -35,14 +34,10 @@ public class SecurityConfig {
         http
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/**").permitAll()
-                        .requestMatchers("/login/", "/login/error", "/register").permitAll()
-                        .requestMatchers("/login/error").permitAll()
-                        .requestMatchers("/forgetPassword").permitAll()
+                        .requestMatchers("/product-images/*", "/cart/*").permitAll()
+                        .requestMatchers("/", "/login/", "/login/error", "/register","/forgetPassword").permitAll()
                         .requestMatchers("/css/**", "/js/**", "/images/**", "/icons/**", "/fonts/**", "/vendor/**").permitAll()
-                        .requestMatchers("/users").hasRole("ADMIN")
-                        .requestMatchers("/products").permitAll()
-                        .requestMatchers("/orders").authenticated()
+                        .requestMatchers("/admin/**").hasRole("ADMIN")
                         .anyRequest().authenticated()
                 )
                 .logout(logout -> logout
@@ -59,7 +54,6 @@ public class SecurityConfig {
                 )
                 .formLogin(form -> form
                         .loginPage("/login")
-                        .successHandler(new SavedRequestAwareAuthenticationSuccessHandler())
                         .defaultSuccessUrl("/")
                         .permitAll()
                 )

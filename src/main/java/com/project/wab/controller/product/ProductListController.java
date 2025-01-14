@@ -14,12 +14,12 @@ import org.springframework.web.bind.annotation.RequestMapping;
  */
 @Controller
 @RequiredArgsConstructor
-@RequestMapping("/product")
+@RequestMapping("/admin")
 public class ProductListController {
     private final ProductService productService;
     private final ProductBrandService productBrandService;
 
-    @GetMapping("/list")
+    @GetMapping("/product/list")
     public String showProductList(Model model) {
         model.addAttribute("productDTO", new ProductDTO());
         model.addAttribute("products", productService.getAllProductsDto());

@@ -10,12 +10,12 @@ import org.springframework.web.bind.annotation.RequestMapping;
  * @author "Vladyslav Paun"
  */
 @Controller
-@RequestMapping("/product")
+@RequestMapping("/admin")
 @RequiredArgsConstructor
 public class ProductDeleteController {
     private final ProductService productService;
 
-    @PostMapping("/delete")
+    @PostMapping("/product/delete")
     public String delete(final Long id) {
         productService.deleteProduct(id);
         return "redirect:/product/list";
