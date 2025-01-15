@@ -23,10 +23,9 @@ import static java.util.Objects.nonNull;
 @RequiredArgsConstructor
 @Slf4j
 public class AdminDetailsService implements UserDetailsService {
+    private final UserRepository userRepository;
     @Value("${lock.time.duration}")
     private long lockTimeDuration;
-
-    private final UserRepository userRepository;
 
     @SneakyThrows
     @Override

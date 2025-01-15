@@ -89,9 +89,7 @@
             </div>
         </div>
         <form id="payment-form" th:action="@{/payment}" th:method="post">
-            <!-- your addressId -->
             <input type="hidden" name="addressId" th:value="${addressDTO.id}"/>
-            <!-- we will populate this later with the Braintree nonce -->
             <input type="hidden" name="nonce" id="nonce"/>
 
             <hr class="my-4"/>

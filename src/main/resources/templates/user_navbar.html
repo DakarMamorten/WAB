@@ -10,7 +10,6 @@
             </button>
             <div class="collapse navbar-collapse justify-content-between" id="navbarNav">
                 <div class="navbar-nav">
-                    <!-- Other menu items can go here -->
                 </div>
                 <div class="navbar-nav">
                     <a th:href="@{/cart/list}">
@@ -24,11 +23,9 @@
                     </a>
                     <div class="dropdown">
                         <span th:if="${#authentication.name == 'anonymousUser'}">
-                            <!-- Show login button when the user is not logged in -->
                             <a class="btn btn-outline-light" th:href="@{/login}">Login</a>
                         </span>
                         <span th:if="${#authentication.name != 'anonymousUser'}">
-                            <!-- Show profile dropdown when the user is logged in -->
                             <button class="btn btn-outline-light dropdown-toggle" type="button" id="profileMenu"
                                     data-bs-toggle="dropdown" aria-expanded="false">
                                 Profile

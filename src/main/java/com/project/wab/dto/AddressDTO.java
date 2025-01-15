@@ -49,7 +49,6 @@ public class AddressDTO {
     private Long shippingMethodId;
     private String shippingMethod;
 
-    // Cart details
     private Long totalCartItems;
     private BigDecimal totalCart;
     private List<CartItemDTO> cartItems;

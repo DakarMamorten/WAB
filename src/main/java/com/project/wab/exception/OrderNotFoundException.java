@@ -9,7 +9,4 @@ public class OrderNotFoundException extends RuntimeException {
         super(message);
     }
 
-    public OrderNotFoundException(String message, Throwable cause) {
-        super(message, cause);
-    }
 }

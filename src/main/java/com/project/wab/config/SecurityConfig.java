@@ -23,11 +23,11 @@ import static org.springframework.security.config.Customizer.withDefaults;
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig {
+    private final AdminDetailsService adminDetailsService;
+
     public SecurityConfig(AdminDetailsService adminDetailsService) {
         this.adminDetailsService = adminDetailsService;
     }
-
-    private final AdminDetailsService adminDetailsService;
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
@@ -35,7 +35,7 @@ public class SecurityConfig {
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/product-images/*", "/cart/*").permitAll()
-                        .requestMatchers("/", "/login/", "/login/error", "/register","/forgetPassword").permitAll()
+                        .requestMatchers("/", "/login/", "/login/error", "/register", "/forgetPassword").permitAll()
                         .requestMatchers("/css/**", "/js/**", "/images/**", "/icons/**", "/fonts/**", "/vendor/**").permitAll()
                         .requestMatchers("/admin/**").hasRole("ADMIN")
                         .anyRequest().authenticated()

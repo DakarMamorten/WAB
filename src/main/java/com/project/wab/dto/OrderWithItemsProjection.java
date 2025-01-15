@@ -21,4 +21,5 @@ public record OrderWithItemsProjection(
         int quantity,
         Long productId,
         String productImagePath
-) {}
+) {
+}

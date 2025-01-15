@@ -26,14 +26,6 @@ public class CartItemService {
     private final CartService cartService;
     private final CartRepository cartRepository;
 
-    public Integer totalProductByCartId(UUID cartId) {
-        return cartItemRepository.totalProductByCartId(cartId);
-    }
-
-    public Integer totalProductByUserId(Long userId) {
-        return cartItemRepository.totalProductByUserId(userId);
-    }
-
     @Transactional
     public String mergeCart(final String cartToken, Long userId) {
         UUID cartUUID = UUID.fromString(cartToken);
@@ -63,7 +55,6 @@ public class CartItemService {
             boolean itemExistsInDb = false;
             for (CartItem dbItem : cartItemsDb) {
                 if (dbItem.getProduct().getId().equals(browserItem.getProduct().getId())) {
-                    // If the item already exists, update the quantity
                     dbItem.setQuantity(dbItem.getQuantity() + browserItem.getQuantity());
                     itemExistsInDb = true;
                     break;
@@ -92,13 +83,6 @@ public class CartItemService {
                 .collect(Collectors.toList());
     }
 
-//    public BigDecimal calculateTotalPriceByCartId(UUID cartId) {
-//        return getCartItemsDTOByCartId(cartId).stream()
-//                .map(CartItemDTO::getTotal)
-//                .reduce(BigDecimal.ZERO, BigDecimal::add);
-//    }
-
-
     private CartItemDTO convertToDTO(CartItem item) {
         BigDecimal total = item.getProduct().getPrice().multiply(BigDecimal.valueOf(item.getQuantity()));
         return new CartItemDTO(
@@ -117,7 +101,6 @@ public class CartItemService {
         cartItem.setQuantity(quantity);
         cartItemRepository.save(cartItem);
     }
-
 
     public void removeCartItem(Long productId, UUID cartId) {
         cartItemRepository.deleteByProductIdAndCartId(productId, cartId);
