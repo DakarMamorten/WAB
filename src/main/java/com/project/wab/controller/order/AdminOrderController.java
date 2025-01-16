@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -46,8 +47,17 @@ public class AdminOrderController {
     }
 
     @PostMapping("/update-shipment")
-    public String updateShipmentStatus(UUID orderId, String newStatus) {
-        orderService.updateShipmentStatus(orderId, newStatus);
+    public String updateShipmentStatus(@RequestParam UUID orderId,
+                                       @RequestParam ShipmentState newShipmentState,
+                                       RedirectAttributes redirectAttributes) {
+        try {
+            orderService.updateShipmentStatusAndNotify(orderId, newShipmentState);
+
+            redirectAttributes.addFlashAttribute("message", "Shipment status updated and notification sent.");
+        } catch (Exception e) {
+            redirectAttributes.addFlashAttribute("error", "Failed to update shipment status: " + e.getMessage());
+        }
+
         return "redirect:/admin/orders";
     }
 
