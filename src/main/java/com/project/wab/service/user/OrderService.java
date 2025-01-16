@@ -6,6 +6,7 @@ import com.project.wab.exception.OrderNotFoundException;
 import com.project.wab.repository.OrderRepository;
 import com.project.wab.service.AddressService;
 import com.project.wab.service.CartService;
+import com.project.wab.service.EmailSender;
 import com.project.wab.service.UserService;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
@@ -17,6 +18,7 @@ import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 /**
@@ -29,6 +31,7 @@ public class OrderService {
     private final CartService cartService;
     private final UserService userService;
     private final AddressService addressService;
+    private final EmailSender emailSender;
 
     private static OrderDTO getOrderDTO(UUID orderId, List<OrderWithItemsProjection> rows) {
         if (rows.isEmpty()) {
@@ -163,5 +166,28 @@ public class OrderService {
 
         orderRepository.bindOrdersToUser(user.getId(), email);
     }
+    @Transactional
+    public void updateShipmentStatusAndNotify(UUID orderId, ShipmentState newShipmentState) {
+        Order order = orderRepository.findById(orderId)
+                .orElseThrow(() -> new OrderNotFoundException("Order not found with ID: " + orderId));
 
+        order.setShipmentState(newShipmentState);
+        orderRepository.save(order);
+
+        notifyUserAboutShipmentStatus(order);
+    }
+
+    private void notifyUserAboutShipmentStatus(Order order) {
+        Email email = new Email();
+        email.setRecipientEmail(order.getUserEmail());
+        email.setSubject("Your order #" + order.getId() + " delivery status updated");
+        email.setTemplate("/email/shipment-status-update");
+        email.setTemplateData(Map.of(
+                "orderId", order.getId(),
+                "shipmentState", order.getShipmentState(),
+                "userEmail", order.getUserEmail()
+        ));
+
+        emailSender.send(email);
+    }
 }
